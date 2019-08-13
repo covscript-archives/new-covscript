@@ -69,7 +69,16 @@ include_directories(
         ${PROJECT_SOURCE_DIR}/parser/generated
         )
 
-aux_source_directory(parser/runtime/src antlr4_SRC)
+aux_source_directory(${PROJECT_SOURCE_DIR}/parser/runtime/src antlr4_SRC_1)
+aux_source_directory(${PROJECT_SOURCE_DIR}/parser/runtime/src/misc antlr4_SRC_2)
+aux_source_directory(${PROJECT_SOURCE_DIR}/parser/runtime/src/atn antlr4_SRC_3)
+aux_source_directory(${PROJECT_SOURCE_DIR}/parser/runtime/src/dfa antlr4_SRC_4)
+aux_source_directory(${PROJECT_SOURCE_DIR}/parser/runtime/src/tree antlr4_SRC_5)
+aux_source_directory(${PROJECT_SOURCE_DIR}/parser/runtime/src/support antlr4_SRC_6)
+aux_source_directory(${PROJECT_SOURCE_DIR}/parser/runtime/src/tree/pattern antlr4_SRC_7)
+aux_source_directory(${PROJECT_SOURCE_DIR}/parser/runtime/src/tree/xpath antlr4_SRC_8)
+set(antlr4_SRC ${antlr4_SRC_1} ${antlr4_SRC_2} ${antlr4_SRC_3} ${antlr4_SRC_4} ${antlr4_SRC_5} ${antlr4_SRC_6} ${antlr4_SRC_7} ${antlr4_SRC_8})
+
 add_library(antlr4_runtime STATIC
         ${antlr4_SRC})
 
@@ -101,7 +110,6 @@ if(CMAKE_CXX_COMPILER_ID MATCHES "MSVC")
 endif()
 
 add_dependencies(covscript4 GenerateParser)
-
 target_link_libraries(covscript4 antlr4_runtime)
 
 
