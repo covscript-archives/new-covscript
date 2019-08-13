@@ -64,6 +64,7 @@ include_directories(
         ${PROJECT_SOURCE_DIR}/parser/runtime/src/tree
         ${PROJECT_SOURCE_DIR}/parser/runtime/src/support
         ${PROJECT_SOURCE_DIR}/parser/generated
+        ${PROJECT_SOURCE_DIR}/parser/include
         )
 
 aux_source_directory(${PROJECT_SOURCE_DIR}/parser/runtime/src antlr4_SRC_1)
@@ -80,6 +81,8 @@ add_library(antlr4_runtime STATIC
         ${antlr4_SRC})
 
 set(parser_SRC
+        parser/include/covscript/compiler/parser.h
+        parser/src/covscript/compiler/parser.cpp
         parser/include/covscript/compiler/file.h)
 
 set(covscript_SRC
