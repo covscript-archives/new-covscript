@@ -180,6 +180,7 @@ KEYWORD_VAR: 'var';
 KEYWORD_IMPORT: 'import';
 KEYWORD_FOR: 'for';
 KEYWORD_WHILE: 'while';
+KEYWORD_USING: 'using';
 
 // Literal
 NumberLiteral

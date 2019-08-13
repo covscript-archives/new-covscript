@@ -25,20 +25,17 @@ else ()
 endif ()
 set(CMAKE_C_STANDARD 11)
 
+find_package(Java COMPONENTS Runtime)
+
 set(ANTLR_JAR_LOCATION ${PROJECT_SOURCE_DIR}/parser/antlr/antlr-4.7.2-complete.jar)
+
 set(covscript-GENERATED_SRC
         ${PROJECT_SOURCE_DIR}/parser/generated/CovScriptLexer.cpp
-        ${PROJECT_SOURCE_DIR}/parser/generated/CovScriptLexer.h
         ${PROJECT_SOURCE_DIR}/parser/generated/CovScriptParser.cpp
-        ${PROJECT_SOURCE_DIR}/parser/generated/CovScriptParser.h
         ${PROJECT_SOURCE_DIR}/parser/generated/CovScriptBaseListener.cpp
-        ${PROJECT_SOURCE_DIR}/parser/generated/CovScriptBaseListener.h
         ${PROJECT_SOURCE_DIR}/parser/generated/CovScriptBaseVisitor.cpp
-        ${PROJECT_SOURCE_DIR}/parser/generated/CovScriptBaseVisitor.h
         ${PROJECT_SOURCE_DIR}/parser/generated/CovScriptListener.cpp
-        ${PROJECT_SOURCE_DIR}/parser/generated/CovScriptListener.h
         ${PROJECT_SOURCE_DIR}/parser/generated/CovScriptVisitor.cpp
-        ${PROJECT_SOURCE_DIR}/parser/generated/CovScriptVisitor.h
         )
 
 foreach(src_file ${covscript-GENERATED_SRC})
@@ -54,7 +51,7 @@ add_custom_command(OUTPUT ${covscript-GENERATED_SRC}
         COMMAND
         ${CMAKE_COMMAND} -E make_directory ${PROJECT_SOURCE_DIR}/parser/generated/
         COMMAND
-        "${Java_JAVA_EXECUTABLE}" -jar ${ANTLR_JAR_LOCATION} -Werror -Dlanguage=Cpp -listener -visitor -o ${PROJECT_SOURCE_DIR}/parser/generated/ -package "cs::parser" ${PROJECT_SOURCE_DIR}/parser/grammar/CovScript.g4
+        "${Java_JAVA_EXECUTABLE}" -jar ${ANTLR_JAR_LOCATION} -Werror -Dlanguage=Cpp -listener -visitor -o ${PROJECT_SOURCE_DIR}/parser/generated/ -package "cs::compiler" ${PROJECT_SOURCE_DIR}/parser/grammar/CovScript.g4
         WORKING_DIRECTORY "${CMAKE_BINARY_DIR}"
         DEPENDS ${PROJECT_SOURCE_DIR}/parser/grammar/CovScript.g4
         )
@@ -82,8 +79,12 @@ set(antlr4_SRC ${antlr4_SRC_1} ${antlr4_SRC_2} ${antlr4_SRC_3} ${antlr4_SRC_4} $
 add_library(antlr4_runtime STATIC
         ${antlr4_SRC})
 
+set(parser_SRC
+        parser/include/covscript/compiler/file.h)
+
 set(covscript_SRC
         ${PROJECT_SOURCE_DIR}/main.cpp
+        ${parser_SRC}
         ${covscript-GENERATED_SRC}
         )
 
