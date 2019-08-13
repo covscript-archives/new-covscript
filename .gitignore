@@ -38,3 +38,6 @@ cmake-build-*/
 java-out
 
 CMakeFiles/
+generated/
+parser/generated/
+
