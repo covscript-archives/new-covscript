@@ -1,5 +1,9 @@
 grammar CovScript;
 
+@lexer::header {
+#include <covscript/compiler/unicode.h>
+}
+
 // Parser
 compilationUnit
     :   statementList EOF
@@ -519,23 +523,23 @@ IDENTIFIER
 fragment
 ScriptLetter
 	:	[a-zA-Z$_] // these are the "java letters" below 0x7F
-//	|	// covers all characters above 0x7F which are not a surrogate
-//		~[\u0000-\u007F\uD800-\uDBFF]
-//		{Character.isJavaIdentifierStart(_input->LA(-1))}?
-//	|	// covers UTF-16 surrogate pairs encodings for U+10000 to U+10FFFF
-//		[\uD800-\uDBFF] [\uDC00-\uDFFF]
-//		{Character.isJavaIdentifierStart(Character.toCodePoint((char)_input->LA(-2), (char)_input->LA(-1)))}?
+	|	// covers all characters above 0x7F which are not a surrogate
+		~[\u0000-\u007F\uD800-\uDBFF]
+		{cs::compiler::Character::isJavaIdentifierStart(_input->LA(-1))}?
+	|	// covers UTF-16 surrogate pairs encodings for U+10000 to U+10FFFF
+		[\uD800-\uDBFF] [\uDC00-\uDFFF]
+		{cs::compiler::Character::isJavaIdentifierStart(cs::compiler::Character::toCodePoint((wchar_t)_input->LA(-2), (wchar_t)_input->LA(-1)))}?
 	;
 
 fragment
 ScriptLetterOrDigit
 	:	[a-zA-Z0-9$_] // these are the "java letters or digits" below 0x7F
-//	|	// covers all characters above 0x7F which are not a surrogate
-//		~[\u0000-\u007F\uD800-\uDBFF]
-//		{Character.isJavaIdentifierPart(_input->LA(-1))}?
-//	|	// covers UTF-16 surrogate pairs encodings for U+10000 to U+10FFFF
-//		[\uD800-\uDBFF] [\uDC00-\uDFFF]
-//		{Character.isJavaIdentifierPart(Character.toCodePoint((char)_input->LA(-2), (char)_input->LA(-1)))}?
+	|	// covers all characters above 0x7F which are not a surrogate
+		~[\u0000-\u007F\uD800-\uDBFF]
+		{cs::compiler::Character::isJavaIdentifierPart(_input->LA(-1))}?
+	|	// covers UTF-16 surrogate pairs encodings for U+10000 to U+10FFFF
+		[\uD800-\uDBFF] [\uDC00-\uDFFF]
+		{cs::compiler::Character::isJavaIdentifierPart(cs::compiler::Character::toCodePoint((wchar_t)_input->LA(-2), (wchar_t)_input->LA(-1)))}?
 	;
 
 //

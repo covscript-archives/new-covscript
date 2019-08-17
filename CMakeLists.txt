@@ -83,7 +83,9 @@ add_library(antlr4_runtime STATIC
 set(parser_SRC
         parser/include/covscript/compiler/parser.h
         parser/src/covscript/compiler/parser.cpp
-        parser/include/covscript/compiler/file.h)
+        parser/include/covscript/compiler/file.h
+        parser/include/covscript/compiler/unicode.h
+        parser/src/covscript/compiler/unicode.cpp)
 
 set(covscript_SRC
         ${PROJECT_SOURCE_DIR}/main.cpp

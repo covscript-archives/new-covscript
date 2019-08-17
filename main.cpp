@@ -14,7 +14,7 @@ public:
 };
 
 int main() {
-    Parser parser("var hello_covscript4 = 10086");
+    Parser parser("var 你好 = 10086");
     auto compilationUnit = parser.compilationUnit();
     MyVisitor visitor;
     visitor.visit(compilationUnit);
