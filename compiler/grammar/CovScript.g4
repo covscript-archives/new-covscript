@@ -10,26 +10,15 @@ compilationUnit
     ;
 
 // Statements
-statementList
-    :   statement*
-    ;
-
 statement
     :   variableDeclStatement SEMI?
     |   importStatement SEMI?
     |   expressionStatement SEMI?
     |   returnStatement SEMI?
-    ;
-
-expressionStatement
-    :   preIncrementExpression
-    |   preDecrementExpression
-    |   primaryExpression (INC | DEC | assignmentOperator expression)
-    |   structuredBindingPrefix ASSIGN expression
-    ;
-
-structuredBindingPrefix
-    :   LPAREN IDENTIFIER (COMMA IDENTIFIER)* RPAREN
+    |   ifStatement SEMI?
+//    |   whileStatement SEMI?
+//    |   forStatement SEMI?
+//    |   loopUntilStatement SEMI?
     ;
 
 variableDeclStatement
@@ -41,9 +30,36 @@ importStatement
     :   KEYWORD_IMPORT IDENTIFIER
     ;
 
+expressionStatement
+    :   preIncrementExpression
+    |   preDecrementExpression
+    |   primaryExpression (INC | DEC | assignmentOperator expression)?
+    |   structuredBindingPrefix ASSIGN expression
+    ;
+
+structuredBindingPrefix
+    :   LPAREN IDENTIFIER (COMMA IDENTIFIER)* RPAREN
+    ;
+
 returnStatement
     :   KEYWORD_RETURN expression
     ;
+
+ifStatement
+    :   KEYWORD_IF LPAREN? conditionalLogicExpression RPAREN?
+            statementBlock
+        (KEYWORD_ELSE statementBlock)?
+    ;
+
+// Statement Helpers
+statementList
+    :   statement*
+    ;
+
+statementBlock
+    :   LBRACE? statementList (KEYWORD_END | RBRACE)?
+    ;
+
 
 // Expressions
 expression
@@ -183,6 +199,7 @@ lambdaBody
     :   LBRACE statementList RBRACE
     ;
 
+// Helpers
 argumentList
     :   (expression (COMMA expression)*)?
     ;
