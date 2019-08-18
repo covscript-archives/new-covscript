@@ -30,7 +30,7 @@ statement
 
 variableDeclStatement
     :   (KEYWORD_VAR | KEYWORD_CONSTANT) IDENTIFIER ASSIGN expression
-    |   (KEYWORD_VAR | KEYWORD_CONSTANT) LPAREN? parameterList RPAREN? ASSIGN expression
+    |   (KEYWORD_VAR | KEYWORD_CONSTANT) LPAREN? IDENTIFIER (COMMA IDENTIFIER)* RPAREN? ASSIGN expression
     ;
 
 functionDeclStatement
