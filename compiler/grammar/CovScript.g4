@@ -29,7 +29,7 @@ expressionStatement
     ;
 
 structuredBindingPrefix
-    :   LPAREN expression COMMA expression (COMMA expression)? RPAREN
+    :   LPAREN IDENTIFIER COMMA IDENTIFIER (COMMA IDENTIFIER)? RPAREN
     ;
 
 variableDeclStatement
