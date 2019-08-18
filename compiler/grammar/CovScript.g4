@@ -16,8 +16,8 @@ statementList
 
 statement
     :   variableDeclStatement SEMI?
-    |   importStatement SEMI
-    |   incAndDecStatement SEMI
+    |   importStatement SEMI?
+    |   incAndDecStatement SEMI?
     ;
 
 incAndDecStatement
