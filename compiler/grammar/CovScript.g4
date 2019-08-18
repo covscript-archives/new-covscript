@@ -16,6 +16,7 @@ statement
     |   importStatement SEMI?
     |   expressionStatement SEMI?
     |   returnStatement SEMI?
+    |   throwStatement SEMI?
     |   blockDeclaration
     |   ifStatement
     |   whileStatement
@@ -53,6 +54,10 @@ structuredBindingPrefix
 
 returnStatement
     :   KEYWORD_RETURN expression
+    ;
+
+throwStatement
+    :   KEYWORD_THROW expression
     ;
 
 blockDeclaration
@@ -314,7 +319,6 @@ KEYWORD_FOR: 'for';
 KEYWORD_WHILE: 'while';
 KEYWORD_LOOP: 'loop';
 KEYWORD_UNTIL: 'until';
-KEYWORD_END: 'end';
 KEYWORD_FOREACH: 'foreach';
 KEYWORD_IN: 'in';
 KEYWORD_DO: 'do';
