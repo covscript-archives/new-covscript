@@ -12,18 +12,19 @@ compilationUnit
 // Statements
 statement
     :   variableDeclStatement SEMI?
+    |   functionDeclStatement SEMI?
     |   importStatement SEMI?
     |   expressionStatement SEMI?
     |   returnStatement SEMI?
-    |   ifStatement SEMI?
-//    |   whileStatement SEMI?
-//    |   forStatement SEMI?
-//    |   loopUntilStatement SEMI?
     ;
 
 variableDeclStatement
     :   (KEYWORD_VAR | KEYWORD_CONSTANT) IDENTIFIER ASSIGN expression
     |   (KEYWORD_VAR | KEYWORD_CONSTANT) LPAREN? parameterList RPAREN? ASSIGN expression
+    ;
+
+functionDeclStatement
+    :   KEYWORD_FUNCTION IDENTIFIER LPAREN parameterList RPAREN statementBlock
     ;
 
 importStatement
@@ -45,21 +46,15 @@ returnStatement
     :   KEYWORD_RETURN expression
     ;
 
-ifStatement
-    :   KEYWORD_IF LPAREN? conditionalLogicExpression RPAREN?
-            statementBlock
-        (KEYWORD_ELSE statementBlock)?
-    ;
-
 // Statement Helpers
 statementList
     :   statement*
     ;
 
 statementBlock
-    :   LBRACE? statementList (KEYWORD_END | RBRACE)?
+    :   LBRACE statementList RBRACE
+    |   statementList KEYWORD_END
     ;
-
 
 // Expressions
 expression
@@ -197,6 +192,7 @@ lambdaExpression
 
 lambdaBody
     :   LBRACE statementList RBRACE
+    |   statement
     ;
 
 // Helpers
@@ -637,3 +633,12 @@ COMMENT
 LINE_COMMENT
     :   '#' ~[\r\n]* -> channel(HIDDEN)
     ;
+
+BEGIN_MARK
+    :   '@begin' -> channel(HIDDEN)
+    ;
+
+END_MARK
+    :   '@end' -> channel(HIDDEN)
+    ;
+
