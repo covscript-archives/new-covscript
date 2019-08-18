@@ -39,5 +39,5 @@ java-out
 
 CMakeFiles/
 generated/
-parser/generated/
+compiler/generated/
 

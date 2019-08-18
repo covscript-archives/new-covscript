@@ -216,7 +216,7 @@ Ref<TokenFactory<CommonToken>> Parser::getTokenFactory() {
 const atn::ATN& Parser::getATNWithBypassAlts() {
   std::vector<uint16_t> serializedAtn = getSerializedATN();
   if (serializedAtn.empty()) {
-    throw UnsupportedOperationException("The current parser does not support an ATN with bypass alternatives.");
+    throw UnsupportedOperationException("The current compiler does not support an ATN with bypass alternatives.");
   }
 
   std::lock_guard<std::mutex> lck(_mutex);
