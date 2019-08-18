@@ -12,10 +12,19 @@ compilationUnit
 // Statements
 statement
     :   variableDeclStatement SEMI?
-    |   functionDeclStatement SEMI?
+    |   functionDeclStatement
     |   importStatement SEMI?
     |   expressionStatement SEMI?
     |   returnStatement SEMI?
+    |   blockDeclaration
+    |   ifStatement
+    |   whileStatement
+    |   loopStatement
+    |   forStatement
+    |   forEachStatement
+    |   tryStatement
+    |   withStatement
+    |   switchStatement
     ;
 
 variableDeclStatement
@@ -24,7 +33,7 @@ variableDeclStatement
     ;
 
 functionDeclStatement
-    :   KEYWORD_FUNCTION IDENTIFIER LPAREN parameterList RPAREN statementBlock
+    :   KEYWORD_FUNCTION IDENTIFIER LPAREN parameterList RPAREN LBRACE statementList RBRACE
     ;
 
 importStatement
@@ -34,7 +43,7 @@ importStatement
 expressionStatement
     :   preIncrementExpression
     |   preDecrementExpression
-    |   primaryExpression (INC | DEC | assignmentOperator expression)?
+    |   primaryExpressionAsStatement (INC | DEC | assignmentOperator expression)?
     |   structuredBindingPrefix ASSIGN expression
     ;
 
@@ -46,14 +55,80 @@ returnStatement
     :   KEYWORD_RETURN expression
     ;
 
+blockDeclaration
+    :   LBRACE statementList RBRACE
+    ;
+
+ifStatement
+    :   KEYWORD_IF LPAREN? expression RPAREN?
+        statement
+        (KEYWORD_ELSE statement)?
+    ;
+
+whileStatement
+    :   KEYWORD_WHILE LPAREN? expression RPAREN? statement
+    ;
+
+loopStatement
+    :   KEYWORD_LOOP statement (KEYWORD_UNTIL expression)?
+    ;
+
+forStatement
+    :   KEYWORD_FOR LPAREN? forInit COMMA forCondition COMMA forUpdate RPAREN?
+        KEYWORD_DO? statement
+    ;
+
+forInit
+    :   IDENTIFIER ASSIGN expression
+    ;
+
+forCondition
+    :   expression
+    ;
+
+forUpdate
+    :   expressionStatement
+    ;
+
+forEachStatement
+    :   KEYWORD_FOREACH IDENTIFIER KEYWORD_IN expression KEYWORD_DO? statement
+    ;
+
+tryStatement
+    :   KEYWORD_TRY statement catchBody?
+    ;
+
+catchBody
+    :   KEYWORD_CATCH LPAREN? IDENTIFIER RPAREN? statement
+    ;
+
+withStatement
+    :   KEYWORD_WITH LPAREN? withInit RPAREN? statement
+    ;
+
+withInit
+    :   KEYWORD_VAR IDENTIFIER ASSIGN expression
+    ;
+
+switchStatement
+    :   KEYWORD_SWITCH LPAREN? expression RPAREN?
+        LBRACE
+            caseEntry*
+            defaultEntry?
+        RBRACE
+    ;
+
+caseEntry
+    :   KEYWORD_CASE LPAREN? literalExpression RPAREN? statement
+    ;
+
+defaultEntry
+    :   KEYWORD_DEFAULT statement
+    ;
+
 // Statement Helpers
 statementList
     :   statement*
-    ;
-
-statementBlock
-    :   LBRACE statementList RBRACE
-    |   statementList KEYWORD_END
     ;
 
 // Expressions
@@ -125,18 +200,26 @@ primaryExpression
     :   primaryPrefix primarySuffix*
     ;
 
+primaryExpressionAsStatement
+    :   primaryPrefixAsStatement primarySuffix*
+    ;
+
 primaryPrefix
-    :   literalExpression
-    |   quotedExpression
-    |   IDENTIFIER
+    :   primaryPrefixAsStatement
+    |   literalExpression
     |   typeidExpression
+    ;
+
+primaryPrefixAsStatement
+    :   quotedExpression
+    |   IDENTIFIER
     |   allocationExpression
     |   lambdaExpression
     ;
 
 primarySuffix
     :   invocationExpression
-    |   listVisitExpression
+    |   arrayVisitExpression
     |   memberVisitExpression
     ;
 
@@ -144,7 +227,7 @@ invocationExpression
     :   LPAREN argumentList RPAREN
     ;
 
-listVisitExpression
+arrayVisitExpression
     :   LBRACK additiveExpression RBRACK
     ;
 
@@ -257,6 +340,7 @@ KEYWORD_ELSE: 'else';
 KEYWORD_SWITCH: 'switch';
 KEYWORD_CASE: 'case';
 KEYWORD_DEFAULT: 'default';
+KEYWORD_WITH: 'with';
 
 // Literal
 NumberLiteral
