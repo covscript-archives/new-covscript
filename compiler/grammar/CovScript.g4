@@ -17,17 +17,25 @@ statementList
 statement
     :   variableDeclStatement SEMI?
     |   importStatement SEMI?
-    |   incAndDecStatement SEMI?
+    |   expressionStatement SEMI?
     |   returnStatement SEMI?
     ;
 
-incAndDecStatement
+expressionStatement
     :   preIncrementExpression
     |   preDecrementExpression
-    |   primaryExpression (INC | DEC | assignmentOperator expression);
+    |   primaryExpression (INC | DEC | assignmentOperator expression)
+    |   structuredBindingPrefix ASSIGN expression
+    ;
+
+structuredBindingPrefix
+    :   LPAREN expression COMMA expression (COMMA expression)? RPAREN
+    ;
 
 variableDeclStatement
     :   (KEYWORD_VAR | KEYWORD_CONSTANT) IDENTIFIER ASSIGN expression
+    |   (KEYWORD_VAR | KEYWORD_CONSTANT) LPAREN parameterList RPAREN ASSIGN expression
+    |   (KEYWORD_VAR | KEYWORD_CONSTANT) parameterList ASSIGN expression
     ;
 
 importStatement
@@ -111,8 +119,6 @@ primaryPrefix
     :   literalExpression
     |   quotedExpression
     |   IDENTIFIER
-    |   pointExpression
-    |   listExpression
     |   typeidExpression
     |   allocationExpression
     |   lambdaExpression
@@ -142,18 +148,24 @@ literalExpression
     |   CharacterLiteral
     |   BooleanLiteral
     |   NullLiteral
+    |   arrayLiteral
+    |   mapLiteral
     ;
 
 quotedExpression
     :   LPAREN conditionalLogicExpression RPAREN
     ;
 
-pointExpression
-    :   LPAREN expression COMMA expression (COMMA expression)? RPAREN
+arrayLiteral
+    :   LBRACE (expression (COMMA expression)*)? COMMA? RBRACE
     ;
 
-listExpression
-    :   LBRACE (expression (COMMA expression)*)? COMMA? RBRACE
+mapLiteral
+    :   LPAREN (mapEntry (COMMA mapEntry)*)? RPAREN
+    ;
+
+mapEntry
+    :   expression COLON expression
     ;
 
 typeidExpression
