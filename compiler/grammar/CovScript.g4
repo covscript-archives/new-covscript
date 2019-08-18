@@ -30,7 +30,11 @@ statement
 
 variableDeclStatement
     :   (KEYWORD_VAR | KEYWORD_CONSTANT) IDENTIFIER ASSIGN expression
-    |   (KEYWORD_VAR | KEYWORD_CONSTANT) LPAREN? IDENTIFIER (COMMA IDENTIFIER)* RPAREN? ASSIGN expression
+    |   (KEYWORD_VAR | KEYWORD_CONSTANT) LPAREN? variableBindingList RPAREN? ASSIGN expression
+    ;
+
+variableBindingList
+    :   IDENTIFIER (COMMA IDENTIFIER)*
     ;
 
 functionDeclStatement
@@ -49,7 +53,7 @@ expressionStatement
     ;
 
 structuredBindingPrefix
-    :   LPAREN IDENTIFIER (COMMA IDENTIFIER)* RPAREN
+    :   LPAREN variableBindingList RPAREN
     ;
 
 returnStatement
