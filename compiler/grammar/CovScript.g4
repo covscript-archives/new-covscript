@@ -18,6 +18,7 @@ statement
     :   variableDeclStatement SEMI?
     |   importStatement SEMI?
     |   incAndDecStatement SEMI?
+    |   returnStatement SEMI?
     ;
 
 incAndDecStatement
@@ -26,11 +27,15 @@ incAndDecStatement
     |   primaryExpression (INC | DEC | assignmentOperator expression);
 
 variableDeclStatement
-    :   KEYWORD_VAR IDENTIFIER ASSIGN expression
+    :   (KEYWORD_VAR | KEYWORD_CONSTANT) IDENTIFIER ASSIGN expression
     ;
 
 importStatement
     :   KEYWORD_IMPORT IDENTIFIER
+    ;
+
+returnStatement
+    :   KEYWORD_RETURN expression
     ;
 
 // Expressions
@@ -67,7 +72,7 @@ additiveExpression
     ;
 
 additiveExpressionRest
-    :   (ADD | SUB) multiplicativeExpression
+    :   (ADD | SUB | KEYWORD_AND | KEYWORD_OR) multiplicativeExpression
     ;
 
 multiplicativeExpression
@@ -79,7 +84,7 @@ multiplicativeExpressionRest
     ;
 
 unaryExpression
-    :   (ADD | SUB | BANG | BITNOT) unaryExpression
+    :   (ADD | SUB | BANG | KEYWORD_NOT | BITNOT) unaryExpression
     |   preIncrementExpression
     |   preDecrementExpression
     |   castExpression
@@ -108,6 +113,8 @@ primaryPrefix
     |   IDENTIFIER
     |   pointExpression
     |   listExpression
+    |   typeidExpression
+    |   allocationExpression
     |   lambdaExpression
     ;
 
@@ -134,6 +141,7 @@ literalExpression
     |   StringLiteral
     |   CharacterLiteral
     |   BooleanLiteral
+    |   NullLiteral
     ;
 
 quotedExpression
@@ -148,12 +156,20 @@ listExpression
     :   LBRACE (expression (COMMA expression)*)? COMMA? RBRACE
     ;
 
+typeidExpression
+    :   KEYWORD_TYPEID expression
+    ;
+
+allocationExpression
+    :   (KEYWORD_NEW | KEYWORD_GCNEW) IDENTIFIER (LPAREN argumentList RPAREN)?
+    ;
+
 lambdaExpression
     :   LBRACK RBRACK LPAREN parameterList RPAREN ARROW lambdaBody
     ;
 
 lambdaBody
-    :   LBRACE statement* expression RBRACE
+    :   LBRACE statementList RBRACE
     ;
 
 argumentList
@@ -181,10 +197,42 @@ assignmentOperator
 // Lexer
 KEYWORD_FUNCTION: 'function';
 KEYWORD_VAR: 'var';
+KEYWORD_CONSTANT: 'constant';
+KEYWORD_NEW: 'new';
+KEYWORD_GCNEW: 'gcnew';
+KEYWORD_TYPEID: 'typeid';
 KEYWORD_IMPORT: 'import';
+KEYWORD_PACKAGE: 'package';
 KEYWORD_FOR: 'for';
 KEYWORD_WHILE: 'while';
+KEYWORD_LOOP: 'loop';
+KEYWORD_UNTIL: 'until';
+KEYWORD_END: 'end';
+KEYWORD_FOREACH: 'foreach';
+KEYWORD_IN: 'in';
+KEYWORD_DO: 'do';
+KEYWORD_BREAK: 'break';
+KEYWORD_CONTINUE: 'continue';
+KEYWORD_RETURN: 'return';
+KEYWORD_THROW: 'throw';
+KEYWORD_TRY: 'try';
+KEYWORD_CATCH: 'catch';
+KEYWORD_STRUCT: 'struct';
+KEYWORD_CLASS: 'class';
+KEYWORD_EXTENDS: 'extends';
+KEYWORD_OVERRIDE: 'override';
 KEYWORD_USING: 'using';
+KEYWORD_NAMESPACE: 'namespace';
+KEYWORD_BLOCK: 'block';
+KEYWORD_GLOBAL: 'global';
+KEYWORD_AND: 'and';
+KEYWORD_OR: 'or';
+KEYWORD_NOT: 'not';
+KEYWORD_IF: 'if';
+KEYWORD_ELSE: 'else';
+KEYWORD_SWITCH: 'switch';
+KEYWORD_CASE: 'case';
+KEYWORD_DEFAULT: 'default';
 
 // Literal
 NumberLiteral
@@ -408,6 +456,11 @@ BooleanLiteral
 	|	'false'
 	;
 
+// Null Literal
+NullLiteral
+    :   'null'
+    ;
+
 // Character Literals
 
 CharacterLiteral
@@ -554,5 +607,5 @@ COMMENT
     ;
 
 LINE_COMMENT
-    :   '//' ~[\r\n]* -> channel(HIDDEN)
+    :   '#' ~[\r\n]* -> channel(HIDDEN)
     ;
