@@ -36,8 +36,8 @@ packageDeclStatement
     ;
 
 variableDeclStatement
-    :   (KEYWORD_VAR | KEYWORD_CONSTANT) IDENTIFIER ASSIGN expression
-    |   (KEYWORD_VAR | KEYWORD_CONSTANT) LPAREN? variableBindingList RPAREN? ASSIGN expression
+    :   (KEYWORD_VAR | KEYWORD_CONST) IDENTIFIER ASSIGN expression
+    |   (KEYWORD_VAR | KEYWORD_CONST) LPAREN? variableBindingList RPAREN? ASSIGN expression
     ;
 
 variableBindingList
@@ -269,7 +269,7 @@ arrayFlatExpression
     ;
 
 memberVisitExpression
-    :   DOT IDENTIFIER
+    :   (DOT | ARROW) IDENTIFIER
     ;
 
 literalExpression
@@ -303,7 +303,7 @@ typeidExpression
     ;
 
 allocationExpression
-    :   (KEYWORD_NEW | KEYWORD_GCNEW) IDENTIFIER (LPAREN argumentList RPAREN)?
+    :   (KEYWORD_NEW | KEYWORD_GCNEW) expression (LPAREN argumentList RPAREN)?
     ;
 
 lambdaExpression
@@ -312,7 +312,7 @@ lambdaExpression
 
 lambdaBody
     :   LBRACE statementList RBRACE
-    |   statement
+    |   quotedExpression
     ;
 
 // Helpers
@@ -341,7 +341,7 @@ assignmentOperator
 // Lexer
 KEYWORD_FUNCTION: 'function';
 KEYWORD_VAR: 'var';
-KEYWORD_CONSTANT: 'constant';
+KEYWORD_CONST: 'const';
 KEYWORD_NEW: 'new';
 KEYWORD_GCNEW: 'gcnew';
 KEYWORD_TYPEID: 'typeid';
