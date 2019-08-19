@@ -252,6 +252,7 @@ primaryPrefixAsStatement
 primarySuffix
     :   invocationExpression
     |   arrayVisitExpression
+    |   arrayFlatExpression
     |   memberVisitExpression
     ;
 
@@ -261,6 +262,10 @@ invocationExpression
 
 arrayVisitExpression
     :   LBRACK additiveExpression RBRACK
+    ;
+
+arrayFlatExpression
+    :   EXPAND
     ;
 
 memberVisitExpression
@@ -316,7 +321,7 @@ argumentList
     ;
 
 parameterList
-    :   (IDENTIFIER (COMMA IDENTIFIER)*)?
+    :   (IDENTIFIER (EXPAND | ((COMMA IDENTIFIER)* | COMMA IDENTIFIER EXPAND)))?
     ;
 
 assignmentOperator
@@ -662,7 +667,6 @@ RBRACK : ']';
 SEMI : ';';
 COMMA : ',';
 DOT : '.';
-ELLIPSIS : '...';
 AT : '@';
 COLONCOLON : '::';
 
@@ -694,6 +698,8 @@ BITOR : '|';
 BITXOR : '^';
 BITNOT : '~';
 MOD : '%';
+
+EXPAND: '...';
 
 ADD_ASSIGN : '+=';
 SUB_ASSIGN : '-=';
