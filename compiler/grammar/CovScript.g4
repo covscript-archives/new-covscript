@@ -45,7 +45,7 @@ variableBindingList
     ;
 
 functionDeclStatement
-    :   KEYWORD_FUNCTION IDENTIFIER LPAREN parameterList RPAREN functionBody
+    :   KEYWORD_FUNCTION IDENTIFIER LPAREN parameterList RPAREN KEYWORD_OVERRIDE? functionBody
     ;
 
 functionBody
