@@ -45,7 +45,11 @@ variableBindingList
     ;
 
 functionDeclStatement
-    :   KEYWORD_FUNCTION IDENTIFIER LPAREN parameterList RPAREN LBRACE statementList RBRACE
+    :   KEYWORD_FUNCTION IDENTIFIER LPAREN parameterList RPAREN functionBody
+    ;
+
+functionBody
+    :   LBRACE statementList RBRACE
     ;
 
 importStatement
@@ -311,7 +315,7 @@ lambdaExpression
     ;
 
 lambdaBody
-    :   LBRACE statementList RBRACE
+    :   functionBody
     |   quotedExpression
     ;
 
