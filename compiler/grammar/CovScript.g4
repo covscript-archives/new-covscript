@@ -283,7 +283,7 @@ literalExpression
     ;
 
 quotedExpression
-    :   LPAREN conditionalLogicExpression RPAREN
+    :   LPAREN conditionalLogicExpression (COMMA conditionalLogicExpression)* RPAREN
     ;
 
 arrayLiteral
