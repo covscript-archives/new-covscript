@@ -11,13 +11,15 @@ compilationUnit
 
 // Statements
 statement
-    :   variableDeclStatement SEMI?
+    :   packageDeclStatement SEMI?
+    |   variableDeclStatement SEMI?
     |   functionDeclStatement
     |   importStatement SEMI?
     |   expressionStatement SEMI?
     |   returnStatement SEMI?
     |   throwStatement SEMI?
-    |   blockDeclaration
+    |   loopControlStatement SEMI?
+    |   blockDeclStatement SEMI?
     |   ifStatement
     |   whileStatement
     |   loopStatement
@@ -26,6 +28,11 @@ statement
     |   tryStatement
     |   withStatement
     |   switchStatement
+    |   classDeclStatement SEMI?
+    ;
+
+packageDeclStatement
+    :   KEYWORD_PACKAGE IDENTIFIER
     ;
 
 variableDeclStatement
@@ -57,14 +64,14 @@ structuredBindingPrefix
     ;
 
 returnStatement
-    :   KEYWORD_RETURN expression
+    :   KEYWORD_RETURN expression?
     ;
 
 throwStatement
     :   KEYWORD_THROW expression
     ;
 
-blockDeclaration
+blockDeclStatement
     :   LBRACE statementList RBRACE
     ;
 
@@ -103,6 +110,11 @@ forEachStatement
     :   KEYWORD_FOREACH IDENTIFIER KEYWORD_IN expression KEYWORD_DO? statement
     ;
 
+loopControlStatement
+    :   KEYWORD_CONTINUE
+    |   KEYWORD_BREAK
+    ;
+
 tryStatement
     :   KEYWORD_TRY statement catchBody?
     ;
@@ -128,11 +140,22 @@ switchStatement
     ;
 
 caseEntry
-    :   KEYWORD_CASE LPAREN? literalExpression RPAREN? statement
+    :   KEYWORD_CASE LPAREN? expression RPAREN? statement
     ;
 
 defaultEntry
     :   KEYWORD_DEFAULT statement
+    ;
+
+classDeclStatement
+    :   (KEYWORD_CLASS | KEYWORD_STRUCT) IDENTIFIER (KEYWORD_EXTENDS IDENTIFIER)?
+        LBRACE
+            classBody
+        RBRACE
+    ;
+
+classBody
+    :   (variableDeclStatement | functionDeclStatement)*
     ;
 
 // Statement Helpers
