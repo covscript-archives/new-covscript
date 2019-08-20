@@ -24,6 +24,8 @@ namespace cs {
             explicit Parser(const std::string& code);
 
             virtual ~Parser() override;
+
+            CovScriptLexer& getLexer();
         };
     }
 }

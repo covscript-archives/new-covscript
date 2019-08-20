@@ -27,5 +27,9 @@ namespace cs {
         Parser::~Parser() {
             delete stream;
         }
+
+        CovScriptLexer& Parser::getLexer() {
+            return lexer;
+        }
     }
 }

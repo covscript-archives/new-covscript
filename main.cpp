@@ -13,8 +13,23 @@ public:
     }
 };
 
+class MyErrorHandler : public antlr4::BaseErrorListener {
+    void
+    syntaxError(antlr4::Recognizer *recognizer, antlr4::Token *offendingSymbol, size_t line, size_t charPositionInLine,
+                const std::string &msg, std::exception_ptr e) override {
+
+    }
+};
+
 int main() {
+    MyErrorHandler errorHandler;
+
     Parser parser("var $ = 10086");
+    parser.removeErrorListeners();
+    parser.getLexer().removeErrorListeners();
+    parser.addErrorListener(&errorHandler);
+    parser.getLexer().addErrorListener(&errorHandler);
+
     auto compilationUnit = parser.compilationUnit();
     MyVisitor visitor;
     visitor.visit(compilationUnit);
