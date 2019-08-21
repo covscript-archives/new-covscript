@@ -14,24 +14,6 @@ namespace cs {
     namespace compiler {
         using namespace cs_compiler_antlr_gen;
 
-        class Parser : public CovScriptParser {
-        private:
-            std::istream *stream;
-            SourceFile sourceFile;
-            CovScriptLexer lexer;
-            antlr4::ANTLRInputStream antlrInputStream;
-            antlr4::CommonTokenStream antlrTokenStream;
-
-        public:
-            explicit Parser(SourceFile file);
-
-            explicit Parser(const std::string &code);
-
-            virtual ~Parser() override;
-
-            CovScriptLexer &getLexer();
-        };
-
         class SyntaxError : public std::exception {
         private:
             antlr4::RuleContext *ruleContext;
@@ -62,6 +44,32 @@ namespace cs {
 
             antlr4::Token *getOffendingSymbol() const {
                 return offendingSymbol;
+            }
+        };
+
+        class Parser : public CovScriptParser {
+        private:
+            std::istream *stream;
+            SourceFile sourceFile;
+            CovScriptLexer lexer;
+            antlr4::ANTLRInputStream antlrInputStream;
+            antlr4::CommonTokenStream antlrTokenStream;
+
+        public:
+            explicit Parser(SourceFile file);
+
+            explicit Parser(const std::string &code);
+
+            virtual ~Parser() override;
+
+            void printSyntaxError(SyntaxError &e);
+
+            CovScriptLexer &getLexer() {
+                return lexer;
+            }
+
+            SourceFile &getSourceFile() {
+                return sourceFile;
             }
         };
     }

@@ -27,9 +27,9 @@ class MyErrorHandler : public antlr4::BaseErrorListener {
 };
 
 int main() {
+    Parser parser(SourceFile("compiler/tests/syntaxError.csc4"));
     MyErrorHandler errorHandler;
 
-    Parser parser("var $ = ");
     parser.removeErrorListeners();
     parser.getLexer().removeErrorListeners();
     parser.addErrorListener(&errorHandler);
@@ -41,11 +41,8 @@ int main() {
         visitor.visit(compilationUnit);
 
     } catch (SyntaxError &e) {
-        printf("Syntax error at file: %s:%zd:%zd: %s\n",
-            e.getOffendingSymbol()->getTokenSource()->getSourceName().c_str(),
-            e.getLine(), e.getCharPosition(),
-            e.getMessage().c_str());
-        printf("%s\n\n", e.getRuleContext()->getText().c_str());
+        parser.printSyntaxError(e);
     }
+
     return 0;
 }

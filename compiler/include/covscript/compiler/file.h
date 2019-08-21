@@ -10,13 +10,20 @@ namespace cs {
     namespace compiler {
         class SourceFile {
         private:
-            std::string sourceName;
+            bool isFileSource;
+            std::string source;
 
         public:
-            explicit SourceFile(std::string sourceName) : sourceName(std::move(sourceName)) {}
+            explicit SourceFile(std::string sourceName, bool isFileSource = true)
+                : source(std::move(sourceName)), isFileSource(isFileSource) {
+            }
 
-            const std::string &getSourceName() const {
-                return sourceName;
+            const std::string &getSource() const {
+                return source;
+            }
+
+            bool isFile() const {
+                return isFileSource;
             }
         };
     }
