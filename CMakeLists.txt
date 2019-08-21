@@ -88,7 +88,7 @@ set(parser_SRC
         compiler/src/covscript/compiler/unicode.cpp)
 
 set(covscript_SRC
-        ${PROJECT_SOURCE_DIR}/main.cpp
+        compiler/src/main.cpp
         ${parser_SRC}
         ${covscript-GENERATED_SRC}
         )
