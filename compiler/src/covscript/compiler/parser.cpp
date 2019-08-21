@@ -28,8 +28,14 @@ namespace cs {
             delete stream;
         }
 
-        CovScriptLexer& Parser::getLexer() {
+        CovScriptLexer &Parser::getLexer() {
             return lexer;
+        }
+
+        SyntaxError::SyntaxError(antlr4::RuleContext *ruleContext, antlr4::Token *offendingToken,
+                                 size_t line, size_t charPosition, std::string message)
+            : ruleContext(ruleContext), offendingSymbol(offendingToken), line(line),
+              charPosition(charPosition), message(std::move(message)) {
         }
     }
 }

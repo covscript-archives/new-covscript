@@ -51,7 +51,7 @@ add_custom_command(OUTPUT ${covscript-GENERATED_SRC}
         COMMAND
         ${CMAKE_COMMAND} -E make_directory ${PROJECT_SOURCE_DIR}/compiler/generated/
         COMMAND
-        "${Java_JAVA_EXECUTABLE}" -jar ${ANTLR_JAR_LOCATION} -Werror -Dlanguage=Cpp -listener -visitor -o ${PROJECT_SOURCE_DIR}/compiler/generated/ -package "cs::compiler" ${PROJECT_SOURCE_DIR}/compiler/grammar/CovScript.g4
+        "${Java_JAVA_EXECUTABLE}" -jar ${ANTLR_JAR_LOCATION} -Werror -Dlanguage=Cpp -listener -visitor -o ${PROJECT_SOURCE_DIR}/compiler/generated/ -package "cs_compiler_antlr_gen" ${PROJECT_SOURCE_DIR}/compiler/grammar/CovScript.g4
         WORKING_DIRECTORY "${CMAKE_BINARY_DIR}"
         DEPENDS ${PROJECT_SOURCE_DIR}/compiler/grammar/CovScript.g4
         )

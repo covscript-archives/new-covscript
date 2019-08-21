@@ -5,11 +5,15 @@
 
 #include <antlr4-runtime.h>
 #include <covscript/compiler/file.h>
-#include "CovScriptParser.h"
-#include "CovScriptLexer.h"
+#include <exception>
+#include <stdexcept>
+#include <CovScriptParser.h>
+#include <CovScriptLexer.h>
 
 namespace cs {
     namespace compiler {
+        using namespace cs_compiler_antlr_gen;
+
         class Parser : public CovScriptParser {
         private:
             std::istream *stream;
@@ -21,11 +25,44 @@ namespace cs {
         public:
             explicit Parser(SourceFile file);
 
-            explicit Parser(const std::string& code);
+            explicit Parser(const std::string &code);
 
             virtual ~Parser() override;
 
-            CovScriptLexer& getLexer();
+            CovScriptLexer &getLexer();
+        };
+
+        class SyntaxError : public std::exception {
+        private:
+            antlr4::RuleContext *ruleContext;
+            antlr4::Token *offendingSymbol;
+            size_t line;
+            size_t charPosition;
+            std::string message;
+
+        public:
+            SyntaxError(antlr4::RuleContext *ruleContext, antlr4::Token *offendingSymbol,
+                        size_t line, size_t charPosition, std::string message);
+
+            antlr4::RuleContext *getRuleContext() const {
+                return ruleContext;
+            }
+
+            size_t getLine() const {
+                return line;
+            }
+
+            size_t getCharPosition() const {
+                return charPosition;
+            }
+
+            const std::string &getMessage() const {
+                return message;
+            }
+
+            antlr4::Token *getOffendingSymbol() const {
+                return offendingSymbol;
+            }
         };
     }
 }
