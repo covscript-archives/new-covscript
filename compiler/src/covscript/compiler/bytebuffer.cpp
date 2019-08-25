@@ -44,7 +44,7 @@ namespace cs {
             // The buffer needs to be expanded
             size_t fitSize = bufferLength * BUFFER_GROWTH_FACTOR;
             byte *fitBuffer = static_cast<byte *>(realloc(buffer, fitSize));
-            if (fitBuffer == nullptr) {
+            if (fitBuffer != nullptr) {
                 // New buffer successfully allocated, the original buffer
                 // was freed by realloc()
                 buffer = fitBuffer;

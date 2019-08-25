@@ -131,4 +131,11 @@ macro(add_benchmark_target name)
     add_test(${name} bench-${name})
 endmacro()
 
+macro(add_test_target name)
+    add_executable(test-${name} compiler/tests/test-${name}.cpp)
+    target_link_libraries(test-${name} covscript4)
+    add_test(${name} test-${name})
+endmacro()
+
 add_benchmark_target(copy)
+add_test_target(bytebuffer)

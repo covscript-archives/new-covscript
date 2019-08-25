@@ -57,6 +57,10 @@ namespace cs {
                 return position;
             }
 
+            void rewind() {
+                position = 0;
+            }
+
         private:
             int16_t readInt16AtLE(int index);
 
