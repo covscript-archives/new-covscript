@@ -18,8 +18,7 @@ void bench() {
     buffer.writeInt16(10086);
     buffer.writeInt32(10010);
     buffer.writeInt64(10000);
-    size_t position = buffer.getPosition();
-    buffer.writeInt32(0);
+    size_t position = buffer.placeholderInt32();
     buffer.writeFloat(3.14f);
     buffer.writeDouble(6.28);
     buffer.writeInt32At(position, 520);

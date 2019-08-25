@@ -103,6 +103,48 @@ namespace cs {
             void writeDoubleAtBE(int index, double value);
 
         public:
+            int placeholderInt8() {
+                int p = this->position;
+                writeInt8(0);
+                return p;
+            }
+
+            int placeholderInt16() {
+                int p = this->position;
+                writeInt16(0);
+                return p;
+            }
+
+            int placeholderInt32() {
+                int p = this->position;
+                writeInt32(0);
+                return p;
+            }
+
+            int placeholderInt64() {
+                int p = this->position;
+                writeInt64(0);
+                return p;
+            }
+
+            int placeholderFloat() {
+                int p = this->position;
+                writeFloat(0);
+                return p;
+            }
+
+            int placeholderDouble() {
+                int p = this->position;
+                writeDouble(0);
+                return p;
+            }
+
+            int placeholderSkip(size_t count) {
+                int p = this->position;
+                position += count;
+                return p;
+            }
+
             int8_t readInt8() {
                 return readInt8At(position++);
             }
