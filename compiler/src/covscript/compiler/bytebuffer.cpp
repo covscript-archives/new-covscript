@@ -35,7 +35,7 @@ namespace cs {
         void ByteBuffer::growBuffer() {
             if (buffer == nullptr) {
                 // The buffer has not been allocated
-                buffer = static_cast<byte *>(malloc(bufferLength));
+                buffer = static_cast<byte *>(malloc(sizeof(buffer[0]) * bufferLength));
                 // TODO: replace with EH
                 assert(buffer != nullptr);
                 return;
@@ -43,7 +43,7 @@ namespace cs {
 
             // The buffer needs to be expanded
             size_t fitSize = bufferLength * BUFFER_GROWTH_FACTOR;
-            byte *fitBuffer = static_cast<byte *>(realloc(buffer, fitSize));
+            byte *fitBuffer = static_cast<byte *>(realloc(buffer, sizeof(buffer[0]) * fitSize));
             if (fitBuffer != nullptr) {
                 // New buffer successfully allocated, the original buffer
                 // was freed by realloc()

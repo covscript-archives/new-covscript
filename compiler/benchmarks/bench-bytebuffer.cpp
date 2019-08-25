@@ -3,10 +3,11 @@
 //
 
 #include <covscript/compiler/bytebuffer.h>
+#include "BenchmarkHelper.h"
 
 using namespace cs::compiler;
 
-int main() {
+void bench() {
     ByteBuffer buffer(2);
     buffer.setOrder(ByteOrder::BO_BIG_ENDIAN);
     buffer.writeInt8('h');
@@ -24,11 +25,19 @@ int main() {
     buffer.writeInt32At(position, 520);
     buffer.rewind();
 
-    assert(buffer.readString(strlen("hello")) == "hello");
+    assert(buffer.readInt8() == 'h');
+    assert(buffer.readInt8() == 'e');
+    assert(buffer.readInt8() == 'l');
+    assert(buffer.readInt8() == 'l');
+    assert(buffer.readInt8() == 'o');
     assert(buffer.readInt16() == 10086);
     assert(buffer.readInt32() == 10010);
     assert(buffer.readInt64() == 10000);
     assert(buffer.readInt32() == 520);
     assert(buffer.readFloat() == 3.14f);
     assert(buffer.readDouble() == 6.28);
+}
+
+int main() {
+    cs::benchmark("ByteBuffer", bench);
 }
