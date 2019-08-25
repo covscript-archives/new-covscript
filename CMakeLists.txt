@@ -29,7 +29,7 @@ find_package(Java COMPONENTS Runtime)
 
 set(ANTLR_JAR_LOCATION ${PROJECT_SOURCE_DIR}/compiler/antlr/antlr-4.7.2-complete.jar)
 
-set(covscript-GENERATED_SRC
+set(compiler-GENERATED_SRC
         ${PROJECT_SOURCE_DIR}/compiler/generated/CovScriptLexer.cpp
         ${PROJECT_SOURCE_DIR}/compiler/generated/CovScriptParser.cpp
         ${PROJECT_SOURCE_DIR}/compiler/generated/CovScriptBaseListener.cpp
@@ -38,16 +38,16 @@ set(covscript-GENERATED_SRC
         ${PROJECT_SOURCE_DIR}/compiler/generated/CovScriptVisitor.cpp
         )
 
-foreach(src_file ${covscript-GENERATED_SRC})
+foreach(src_file ${compiler-GENERATED_SRC})
     set_source_files_properties(
             ${src_file}
             PROPERTIES
             GENERATED TRUE
     )
-endforeach(src_file ${covscript-GENERATED_SRC})
+endforeach(src_file ${compiler-GENERATED_SRC})
 
-add_custom_target(GenerateParser DEPENDS ${covscript-GENERATED_SRC})
-add_custom_command(OUTPUT ${covscript-GENERATED_SRC}
+add_custom_target(GenerateParser DEPENDS ${compiler-GENERATED_SRC})
+add_custom_command(OUTPUT ${compiler-GENERATED_SRC}
         COMMAND
         ${CMAKE_COMMAND} -E make_directory ${PROJECT_SOURCE_DIR}/compiler/generated/
         COMMAND
@@ -80,17 +80,18 @@ set(antlr4_SRC ${antlr4_SRC_1} ${antlr4_SRC_2} ${antlr4_SRC_3} ${antlr4_SRC_4} $
 add_library(antlr4_runtime STATIC
         ${antlr4_SRC})
 
-set(parser_SRC
+#### CovScript SDK library target
+set(compiler_SRC
+        ${compiler-GENERATED_SRC}
         compiler/include/covscript/compiler/parser.h
         compiler/src/covscript/compiler/parser.cpp
-        compiler/include/covscript/compiler/file.h
         compiler/include/covscript/compiler/unicode.h
-        compiler/src/covscript/compiler/unicode.cpp)
+        compiler/src/covscript/compiler/unicode.cpp 
+        compiler/include/covscript/compiler/bytebuffer.h
+        compiler/src/covscript/compiler/bytebuffer.cpp)
 
 set(covscript_SRC
-        compiler/src/main.cpp
-        ${parser_SRC}
-        ${covscript-GENERATED_SRC}
+        ${compiler_SRC}
         )
 
 if(NOT CMAKE_CXX_COMPILER_ID MATCHES "MSVC")
@@ -107,9 +108,7 @@ foreach(src_file ${covscript_SRC})
     )
 endforeach(src_file ${covscript_SRC})
 
-add_executable(covscript4
-        ${covscript_SRC}
-        )
+add_library(covscript4 SHARED ${covscript_SRC})
 
 if(CMAKE_CXX_COMPILER_ID MATCHES "MSVC")
     target_compile_options(covscript4 PRIVATE "/MT$<$<CONFIG:Debug>:d>")
@@ -118,4 +117,18 @@ endif()
 add_dependencies(covscript4 GenerateParser)
 target_link_libraries(covscript4 antlr4_runtime)
 
+#### CovScript Compiler interface target
+add_executable(compiler
+        compiler/src/main.cpp
+        )
 
+target_link_libraries(compiler covscript4)
+
+#### Benchmarks and Tests
+macro(add_benchmark_target name)
+    add_executable(bench-${name} compiler/benchmarks/bench-${name}.cpp)
+    target_link_libraries(bench-${name} covscript4)
+    add_test(${name} bench-${name})
+endmacro()
+
+add_benchmark_target(copy)

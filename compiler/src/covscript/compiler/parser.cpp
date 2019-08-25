@@ -90,5 +90,9 @@ namespace cs {
             : ruleContext(ruleContext), offendingSymbol(offendingToken), line(line),
               charPosition(charPosition), message(std::move(message)) {
         }
+
+        SourceFile::SourceFile(std::string sourceName, bool isFileSource)
+            : source(std::move(sourceName)), isFileSource(isFileSource) {
+        }
     }
 }

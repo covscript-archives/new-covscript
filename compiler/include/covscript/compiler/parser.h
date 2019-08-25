@@ -4,7 +4,6 @@
 #pragma once
 
 #include <antlr4-runtime.h>
-#include <covscript/compiler/file.h>
 #include <exception>
 #include <stdexcept>
 #include <CovScriptParser.h>
@@ -13,6 +12,23 @@
 namespace cs {
     namespace compiler {
         using namespace cs_compiler_antlr_gen;
+
+        class SourceFile {
+        private:
+            bool isFileSource;
+            std::string source;
+
+        public:
+            explicit SourceFile(std::string sourceName, bool isFileSource = true);
+
+            const std::string &getSource() const {
+                return source;
+            }
+
+            bool isFile() const {
+                return isFileSource;
+            }
+        };
 
         class SyntaxError : public std::exception {
         private:
