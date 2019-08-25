@@ -9,7 +9,16 @@ using namespace cs::compiler;
 class MyVisitor : public CovScriptBaseVisitor {
 public:
     antlrcpp::Any visitVariableDeclStatement(CovScriptParser::VariableDeclStatementContext *ctx) override {
-        printf("declare variable: %s", ctx->IDENTIFIER()->getText().c_str());
+        if (ctx->IDENTIFIER() != nullptr) {
+            printf("declare variable: %s\n", ctx->IDENTIFIER()->getText().c_str());
+        } else if (ctx->variableBindingList() != nullptr) {
+            printf("declare variables: ");
+            auto list = ctx->variableBindingList();
+            for (auto id : list->IDENTIFIER()) {
+                printf("%s, ", id->getText().c_str());
+            }
+            printf("\n");
+        }
         return CovScriptBaseVisitor::visitVariableDeclStatement(ctx);
     }
 };
@@ -27,7 +36,7 @@ class MyErrorHandler : public antlr4::BaseErrorListener {
 };
 
 int main() {
-    Parser parser(SourceFile("compiler/tests/syntaxError.csc4"));
+    Parser parser(SourceFile("compiler/tests/csbuild.csc4"));
     MyErrorHandler errorHandler;
 
     parser.removeErrorListeners();
