@@ -8,7 +8,7 @@
 using namespace cs::compiler;
 
 void bench() {
-    ByteBuffer buffer(2);
+    ByteBuffer buffer(1);
     buffer.setOrder(ByteOrder::BO_BIG_ENDIAN);
     buffer.writeInt8('h');
     buffer.writeInt8('e');
