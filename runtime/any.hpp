@@ -84,14 +84,30 @@ private:
     对于复制成本低的对象不再使用引用计数器持有
 */
     class stor_union final {
-        // 触发小对象优化的阈值
+        // 触发小对象优化的阈值，需大于sizeof(stor_proxy*)
         static constexpr unsigned int static_stor_size=sizeof(stor_proxy);
     public:
-        union {
-            unsigned char static_stor[static_stor_size];
-            stor_proxy* dynamic_stor;
-        } data_stor;
+        unsigned char data_stor[static_stor_size];
         bool is_static=false;
-        stor_base* data;
     };
+
+    stor_union m_data;
+
+    template<typename T>
+    void store(T&& val)
+    {
+        if(sizeof(T)<stor_union::static_stor_size)
+        {
+            ::new (m_data.data_stor) T(std::forward<T>(val));
+            m_data.is_static=true;
+        }else{
+            ::new (m_data.data_stor) stor_proxy*(new stor_proxy);
+            m_data.is_static=false;
+        }
+    }
+
+    void clone()
+    {
+        
+    }
 };
