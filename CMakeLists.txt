@@ -98,14 +98,15 @@ set(compiler_SRC
 
 set(runtime_SRC
         runtime/include/covscript/runtime/vm_instance.hpp
-        shared/include/covscript/shared/vm_type.hpp
         )
 
 set(shared_SRC
         shared/include/covscript/shared/any.hpp
         shared/include/covscript/shared/exception.hpp
         shared/include/covscript/shared/memory.hpp
-        shared/include/covscript/shared/utility.hpp)
+        shared/include/covscript/shared/utility.hpp
+        shared/include/covscript/shared/vm_type.hpp
+        )
 
 set(covscript_SRC
         ${compiler_SRC}
