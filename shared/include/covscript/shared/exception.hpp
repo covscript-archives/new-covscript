@@ -4,7 +4,7 @@
 #include <string>
 
 namespace cs {
-    class runtime_error final : public std::exception {
+	class runtime_error final : public std::exception {
 		std::string mWhat = "Runtime Error";
 	public:
 		runtime_error() = default;
@@ -28,17 +28,17 @@ namespace cs {
 		}
 	};
 
-    namespace event{
-        extern utility::event_type exception_raised;
-    }
+	namespace event {
+		extern utility::event_type exception_raised;
+	}
 
-    template<typename T, typename...ArgsT>
-    void throw_ex(ArgsT&&...args)
-    {
-        T exception(std::forward<ArgsT>(args)...);
-        std::exception &stdexcept=exception;
-        // Handle exceptions here
-        event::exception_raised.touch(&stdexcept);
-        throw exception;
-    }
+	template<typename T, typename...ArgsT>
+	void throw_ex(ArgsT&&...args)
+	{
+		T exception(std::forward<ArgsT>(args)...);
+		std::exception &stdexcept=exception;
+		// Handle exceptions here
+		event::exception_raised.touch(&stdexcept);
+		throw exception;
+	}
 }
