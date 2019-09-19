@@ -94,17 +94,20 @@ set(compiler_SRC
         compiler/include/covscript/compiler/function.h)
 
 set(runtime_SRC
-        runtime/any.hpp
-        runtime/exception.hpp
-        runtime/memory.hpp
-        runtime/utility.hpp
         runtime/vm_instance.hpp
         runtime/vm_type.hpp
         )
 
+set(shared_SRC
+        shared/any.hpp
+        shared/exception.hpp
+        shared/memory.hpp
+        shared/utility.hpp)
+
 set(covscript_SRC
         ${compiler_SRC}
         ${runtime_SRC}
+        ${shared_SRC}
         )
 
 if(NOT CMAKE_CXX_COMPILER_ID MATCHES "MSVC")
