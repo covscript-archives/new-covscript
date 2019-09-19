@@ -94,11 +94,11 @@ set(compiler_SRC
         compiler/include/covscript/compiler/scope.h
         compiler/include/covscript/compiler/variable.h
         compiler/include/covscript/compiler/function.h
-        )
+        compiler/include/covscript/compiler/types.h)
 
 set(runtime_SRC
         runtime/include/covscript/runtime/vm_instance.hpp
-        runtime/include/covscript/runtime/vm_type.hpp
+        shared/include/covscript/shared/vm_type.hpp
         )
 
 set(shared_SRC
