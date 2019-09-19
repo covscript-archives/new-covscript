@@ -151,5 +151,7 @@ namespace cs {
 				return iterator(m_start - 1);
 			}
 		};
+
+        class any {};
 	}
 }
