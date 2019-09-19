@@ -1,5 +1,5 @@
 #pragma once
-#include <runtime/exception.hpp>
+#include <covscript/shared/exception.hpp>
 #include <cstdlib>
 #include <cstddef>
 
