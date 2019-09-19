@@ -65,6 +65,8 @@ include_directories(
         ${PROJECT_SOURCE_DIR}/compiler/runtime/src/support
         ${PROJECT_SOURCE_DIR}/compiler/generated
         ${PROJECT_SOURCE_DIR}/compiler/include
+        ${PROJECT_SOURCE_DIR}/runtime/include
+        ${PROJECT_SOURCE_DIR}/shared/include
         )
 
 aux_source_directory(${PROJECT_SOURCE_DIR}/compiler/runtime/src antlr4_SRC_1)
@@ -91,18 +93,19 @@ set(compiler_SRC
         compiler/src/covscript/compiler/bytebuffer.cpp
         compiler/include/covscript/compiler/scope.h
         compiler/include/covscript/compiler/variable.h
-        compiler/include/covscript/compiler/function.h)
+        compiler/include/covscript/compiler/function.h
+        )
 
 set(runtime_SRC
-        runtime/vm_instance.hpp
-        runtime/vm_type.hpp
+        runtime/include/covscript/runtime/vm_instance.hpp
+        runtime/include/covscript/runtime/vm_type.hpp
         )
 
 set(shared_SRC
-        shared/any.hpp
-        shared/exception.hpp
-        shared/memory.hpp
-        shared/utility.hpp)
+        shared/include/covscript/shared/any.hpp
+        shared/include/covscript/shared/exception.hpp
+        shared/include/covscript/shared/memory.hpp
+        shared/include/covscript/shared/utility.hpp)
 
 set(covscript_SRC
         ${compiler_SRC}

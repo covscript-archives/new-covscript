@@ -84,6 +84,7 @@ private:
     对于复制成本低的对象不再使用引用计数器持有
 */
     class stor_union final {
+    public:
         // 触发小对象优化的阈值，需大于sizeof(stor_proxy*)
         static constexpr unsigned int static_stor_size=sizeof(stor_proxy);
     public:
