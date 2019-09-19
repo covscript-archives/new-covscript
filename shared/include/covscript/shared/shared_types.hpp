@@ -4,7 +4,7 @@
 #include <cstdint>
 
 namespace cs {
-    namespace builtin_types {
+    namespace shared_types {
         using vm_int = long;
         using vm_float = double;
         using vm_bool = bool;
