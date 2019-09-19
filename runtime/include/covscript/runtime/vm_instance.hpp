@@ -1,5 +1,6 @@
 #pragma once
-#include <runtime/memory.hpp>
+
+#include <covscript/shared/memory.hpp>
 
 namespace cs {
     class vm_instance final {
