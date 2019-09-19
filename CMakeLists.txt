@@ -90,10 +90,21 @@ set(compiler_SRC
         compiler/include/covscript/compiler/bytebuffer.h
         compiler/src/covscript/compiler/bytebuffer.cpp
         compiler/include/covscript/compiler/scope.h
-        compiler/include/covscript/compiler/variable.h compiler/include/covscript/compiler/function.h)
+        compiler/include/covscript/compiler/variable.h
+        compiler/include/covscript/compiler/function.h)
+
+set(runtime_SRC
+        runtime/any.hpp
+        runtime/exception.hpp
+        runtime/memory.hpp
+        runtime/utility.hpp
+        runtime/vm_instance.hpp
+        runtime/vm_type.hpp
+        )
 
 set(covscript_SRC
         ${compiler_SRC}
+        ${runtime_SRC}
         )
 
 if(NOT CMAKE_CXX_COMPILER_ID MATCHES "MSVC")
