@@ -88,7 +88,9 @@ set(compiler_SRC
         compiler/include/covscript/compiler/unicode.h
         compiler/src/covscript/compiler/unicode.cpp 
         compiler/include/covscript/compiler/bytebuffer.h
-        compiler/src/covscript/compiler/bytebuffer.cpp)
+        compiler/src/covscript/compiler/bytebuffer.cpp
+        compiler/include/covscript/compiler/scope.h
+        compiler/include/covscript/compiler/variable.h compiler/include/covscript/compiler/function.h)
 
 set(covscript_SRC
         ${compiler_SRC}
@@ -119,8 +121,7 @@ target_link_libraries(covscript4 antlr4_runtime)
 
 #### CovScript Compiler interface target
 add_executable(compiler
-        compiler/src/main.cpp
-        )
+        compiler/src/main.cpp)
 
 target_link_libraries(compiler covscript4)
 

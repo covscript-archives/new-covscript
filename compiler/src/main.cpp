@@ -11,6 +11,7 @@ public:
     antlrcpp::Any visitVariableDeclStatement(CovScriptParser::VariableDeclStatementContext *ctx) override {
         if (ctx->IDENTIFIER() != nullptr) {
             printf("declare variable: %s\n", ctx->IDENTIFIER()->getText().c_str());
+
         } else if (ctx->variableBindingList() != nullptr) {
             printf("declare variables: ");
             auto list = ctx->variableBindingList();
