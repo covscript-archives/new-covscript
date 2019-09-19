@@ -88,7 +88,10 @@ private:
 	struct stor_union {
 		// 触发小对象优化的阈值，需大于alignof(stor_impl<std::size_t>)
 		static constexpr unsigned int static_stor_size=alignof(stor_impl<std::size_t>);
-		unsigned char data_stor[static_stor_size];
+        union {
+		    unsigned char data[static_stor_size];
+            stor_base* ptr;
+        } impl;
 		stor_status status=stor_status::null;
 	};
 
@@ -96,7 +99,28 @@ private:
 
     inline stor_base* get_handler()
     {
-        return reinterpret_cast<stor_base*>(m_data.data_stor);
+        switch(m_data.status)
+        {
+            case stor_status::null:
+                return nullptr;
+            case stor_status::data:
+                return reinterpret_cast<stor_base*>(m_data.impl.data);
+            case stor_status::ptr:
+                return m_data.impl.ptr;
+        }
+    }
+
+    inline const stor_base* get_handler() const
+    {
+        switch(m_data.status)
+        {
+            case stor_status::null:
+                return nullptr;
+            case stor_status::data:
+                return reinterpret_cast<const stor_base*>(m_data.impl.data);
+            case stor_status::ptr:
+                return m_data.impl.ptr;
+        }
     }
 
     inline void recycle()
@@ -109,26 +133,26 @@ private:
 	void store(T&& val)
 	{
 		if(sizeof(T)<=stor_union::static_stor_size) {
-			::new (m_data.data_stor) stor_impl<T>(std::forward<T>(val));
+			::new (m_data.impl.data) stor_impl<T>(std::forward<T>(val));
 			m_data.status=stor_status::data;
 		}
 		else {
-			::new (m_data.data_stor) stor_base*(stor_impl<T>::allocator.alloc(std::forward<T>(val)));
+			m_data.impl.ptr = stor_impl<T>::allocator.alloc(std::forward<T>(val));
 			m_data.status=stor_status::ptr;
 		}
 	}
 
-    void copy(const stor_union& data)
+    void copy(const any& data)
     {
-        if(data.status!=stor_status::null){
-            const stor_base* ptr=reinterpret_cast<const stor_base*>(data.data_stor);
-            if(data.status==stor_status::ptr)
+        if(data.m_data.status!=stor_status::null){
+            const stor_base* ptr=data.get_handler();
+            if(data.m_data.status==stor_status::ptr)
             {
                 recycle();
-                ::new (m_data.data_stor) stor_base*(ptr->clone());
+                m_data.impl.ptr = ptr->clone();
             }else
-                ptr->clone(m_data.data_stor);
-            m_data.status=data.status;
+                ptr->clone(m_data.impl.data);
+            m_data.status=data.m_data.status;
         }
     }
 
@@ -142,7 +166,7 @@ public:
 
     any(const any& val)
     {
-        copy(val.m_data);
+        copy(val);
     }
 
     ~any()
