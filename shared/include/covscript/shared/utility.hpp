@@ -11,7 +11,7 @@ namespace cs {
 		private:
 			std::vector<listener_type> m_listener;
 		public:
-			event_type() = delete;
+			event_type() = default;
 
 			event_type(const event_type &) = delete;
 

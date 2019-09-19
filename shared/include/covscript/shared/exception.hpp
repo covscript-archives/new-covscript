@@ -29,7 +29,7 @@ namespace cs {
 	};
 
 	namespace event {
-		extern utility::event_type exception_raised;
+		utility::event_type exception_raised;
 	}
 
 	template<typename T, typename...ArgsT>
