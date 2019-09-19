@@ -92,21 +92,21 @@ namespace cs {
 			inline T &top() const
 			{
 				if (empty())
-					throw runtime_error("Stack is empty.");
+					throw_ex<runtime_error>("Stack is empty.");
 				return *(m_current - 1);
 			}
 
 			inline T &bottom() const
 			{
 				if (empty())
-					throw runtime_error("Stack is empty.");
+					throw_ex<runtime_error>("Stack is empty.");
 				return *m_start;
 			}
 
 			inline T &at(std::size_t offset) const
 			{
 				if (offset >= size())
-					throw runtime_error("Stack out of range.");
+					throw_ex<runtime_error>("Stack out of range.");
 				return *(m_current - offset - 1);
 			}
 
@@ -119,14 +119,14 @@ namespace cs {
 			inline void push(ArgsT &&...args)
 			{
 				if (full())
-					throw runtime_error("Stack overflow.");
+					throw_ex<runtime_error>("Stack overflow.");
 				::new(m_current++) T(std::forward<ArgsT>(args)...);
 			}
 
 			inline T pop()
 			{
 				if (empty())
-					throw runtime_error("Stack is empty.");
+					throw_ex<runtime_error>("Stack is empty.");
 				T data(std::move(*m_current));
 				(m_current - 1)->~T();
 				--m_current;
