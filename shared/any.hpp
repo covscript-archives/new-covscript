@@ -69,23 +69,12 @@ private:
         }
     };
 /*
-    数据存储中介，实现引用计数垃圾回收器
-    此处使用原子引用计数器
-*/
-    class stor_proxy final {
-    public:
-        bool is_rvalue = false;
-        stor_base* data_ptr = nullptr;
-        std::atomic_int_fast64_t ref_count;
-        stor_proxy():ref_count(0) {}
-    };
-/*
     实现小对象优化
     对于复制成本低的对象不再使用引用计数器持有
 */
     class stor_union final {
-        // 触发小对象优化的阈值，需大于sizeof(stor_proxy*)
-        static constexpr unsigned int static_stor_size=sizeof(stor_proxy);
+        // 触发小对象优化的阈值，需大于alignof(stor_impl<std::size_t>)
+        static constexpr unsigned int static_stor_size=alignof(stor_impl<std::size_t>);
     public:
         unsigned char data_stor[static_stor_size];
         bool is_static=false;
