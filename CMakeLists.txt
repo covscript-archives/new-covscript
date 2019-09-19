@@ -93,9 +93,8 @@ set(compiler_SRC
         compiler/src/covscript/compiler/bytebuffer.cpp
         compiler/include/covscript/compiler/scope.h
         compiler/include/covscript/compiler/variable.h
-        compiler/include/covscript/compiler/function.h
         compiler/include/covscript/compiler/types.h
-        )
+        compiler/src/covscript/compiler/scope.cpp)
 
 set(runtime_SRC
         runtime/include/covscript/runtime/vm_instance.hpp

@@ -7,11 +7,12 @@
 
 namespace cs {
     namespace compiler {
-        using VmInt = cs::shared_types::vm_int;
-        using VmFloat = cs::shared_types::vm_float;
-        using VmBool = cs::shared_types::vm_bool;
-        using VmChar = cs::shared_types::vm_char;
-        using VmString = cs::shared_types::vm_string;
+        using VMInt = cs::shared_types::vm_int;
+        using VMFloat = cs::shared_types::vm_float;
+        using VMBool = cs::shared_types::vm_bool;
+        using VMChar = cs::shared_types::vm_char;
+        using VMString = cs::shared_types::vm_string;
     }
+
 }
 
