@@ -1,3 +1,5 @@
+#define COVSCRIPT_SDK_DEBUG
+
 #include <covscript/shared/any.hpp>
 #include <iostream>
 #include <string>

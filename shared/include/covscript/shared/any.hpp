@@ -13,8 +13,11 @@ class cs::runtime::any final {
 public:
 	using typeid_t = std::type_index;
 	using byte_t = unsigned char;
+	static constexpr std::size_t default_allocate_buffer_size = 64;
+	template<typename T> using default_allocator_provider=std::allocator<T>;
+	template<typename T> using default_allocator=allocator_type<T, default_allocate_buffer_size, default_allocator_provider>;
 
-private:
+private: 
 	/*
 	    数据存储基类
 	    使用多态实现类型擦除的关键，即抽象出类型无关的接口
@@ -51,7 +54,7 @@ private:
 
 	public:
 		// 分配器
-		static allocator_type<stor_impl<T>, 96> allocator;
+		static default_allocator<stor_impl<T>> allocator;
 		// 默认构造函数，使用default实现
 		stor_impl() = default;
 		// 析构函数，使用default实现
@@ -106,8 +109,8 @@ private:
 	};
 
 	struct stor_union {
-		// 触发小对象优化的阈值，需大于alignof(stor_impl<std::size_t>)
-		static constexpr unsigned int static_stor_size = alignof(stor_impl<std::size_t>);
+		// 触发小对象优化的阈值，需大于std::alignment_of<stor_base *>::value
+		static constexpr unsigned int static_stor_size = std::alignment_of<stor_base *>::value;
 		union {
 			unsigned char data[static_stor_size];
 			stor_base *ptr;
@@ -143,8 +146,10 @@ private:
 
 	inline void recycle()
 	{
-		if (m_data.status != stor_status::null)
+		if (m_data.status != stor_status::null){
 			get_handler()->suicide(m_data.status == stor_status::data);
+			cs_sdk_log_ev(m_data.status == stor_status::data?"Any Small Data Recycled.":"Any Normal Data Recycled.")
+		}
 	}
 
 	template <typename T>
@@ -153,10 +158,12 @@ private:
 		if (sizeof(T) <= stor_union::static_stor_size) {
 			::new (m_data.impl.data) stor_impl<T>(val);
 			m_data.status = stor_status::data;
+			cs_sdk_log_ev("Any SDO Enabled.")
 		}
 		else {
 			m_data.impl.ptr = stor_impl<T>::allocator.alloc(val);
 			m_data.status = stor_status::ptr;
+			cs_sdk_log_ev("Any SDO Disabled.")
 		}
 	}
 
@@ -167,9 +174,13 @@ private:
 			if (data.m_data.status == stor_status::ptr) {
 				recycle();
 				m_data.impl.ptr = ptr->clone();
+				cs_sdk_log_ev("Any Small Data Copied.")
 			}
 			else
+			{
 				ptr->clone(m_data.impl.data);
+				cs_sdk_log_ev("Any Normal Data Copied.")
+			}
 			m_data.status = data.m_data.status;
 		}
 	}
@@ -215,4 +226,4 @@ public:
 };
 
 template <typename T>
-cs::runtime::allocator_type<cs::runtime::any::stor_impl<T>, 96> cs::runtime::any::stor_impl<T>::allocator;
+cs::runtime::any::default_allocator<cs::runtime::any::stor_impl<T>> cs::runtime::any::stor_impl<T>::allocator;

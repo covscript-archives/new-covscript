@@ -37,3 +37,10 @@ namespace cs {
 		};
 	} // namespace utility
 } // namespace cs
+
+#ifdef COVSCRIPT_SDK_DEBUG
+#include <cstdio>
+#define cs_sdk_log_ev(msg) ::printf("[%s] In file %s, line %d: %s\n", __TIME__, __FILE__, __LINE__, msg);
+#else
+#define cs_sdk_log_ev(msg)
+#endif
