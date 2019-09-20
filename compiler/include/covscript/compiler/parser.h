@@ -108,7 +108,7 @@ namespace cs {
         public:
             explicit Parser(SourceFile &file);
 
-            virtual ~Parser() override;
+            ~Parser() override;
 
             void printSyntaxError(SyntaxError &e);
 
