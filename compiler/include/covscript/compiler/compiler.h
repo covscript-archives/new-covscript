@@ -5,25 +5,45 @@
 
 #include <covscript/compiler/scope.h>
 #include <covscript/compiler/parser.h>
+#include <unordered_map>
 #include <list>
 
 namespace cs {
     namespace compiler {
         class CompilerData {
-            friend class CompilerPhase;
+        public:
+            using CompileFiles = std::unordered_map<Ptr<SourceFile>, CovScriptParser::CompilationUnitContext *>;
 
         private:
             Scope *_globalScope;
+            CompileFiles _compileFiles;
 
+        public:
             Scope *getGlobalScope() { return _globalScope; }
+
+            CompileFiles &getCompileFiles() { return _compileFiles; }
         };
 
         class CompilerPhase {
+            friend class BaseCompiler;
+
         private:
+            /**
+             * The phase name must satisfy the following rule:
+             * <PhasePurpose>:<Routine>
+             * where PhasePurpose is one of these:
+             *  * Assemble
+             *  * Optimize
+             *  * CodeGen
+             *  * Verify
+             * Routine is unlimited.
+             */
             VMString _phaseName;
 
         protected:
             explicit CompilerPhase(VMString _phaseName);
+
+            virtual ~CompilerPhase() = default;
 
             const VMString &getPhaseName() {
                 return _phaseName;
@@ -37,10 +57,44 @@ namespace cs {
             virtual void postPhase(CompilerData &compilerData) = 0;
         };
 
-        class Compiler {
-        private:
+        class BaseCompiler {
+        protected:
             CompilerData _privateData;
-            std::list<CompilerPhase *> _compilerPhases;
+            std::list<Ptr<CompilerPhase>> _compilerPhases;
+
+        protected:
+            void preparePhase(Ptr<CompilerPhase> &phase);
+
+            void runPhase(Ptr<CompilerPhase> &phase,
+                          CovScriptParser::CompilationUnitContext *compilationUnit);
+
+            void postPhase(Ptr<CompilerPhase> &phase);
+
+        public:
+            BaseCompiler() = default;
+
+            virtual ~BaseCompiler() = default;
+
+            template<typename T>
+            void registerPhase() {
+                _compilerPhases.push_back(makePtr<T>());
+            }
+        };
+
+        class CovScriptCompiler : public BaseCompiler {
+        private:
+            void constructASTs();
+
+        public:
+            CovScriptCompiler() = default;
+
+            ~CovScriptCompiler() override = default;
+
+            void addFile(const Ptr<SourceFile> &file) {
+                _privateData.getCompileFiles()[file] = nullptr;
+            }
+
+            void compile();
         };
     }
 }

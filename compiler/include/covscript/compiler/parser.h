@@ -99,14 +99,14 @@ namespace cs {
 
         class Parser : public CovScriptParser {
         private:
-            SourceFile &_sourceFile;
+            Ptr<SourceFile> _sourceFile;
             CovScriptLexer _lexer;
             Ref<std::istream> _nativeStream;
             antlr4::ANTLRInputStream _antlrInputStream;
             antlr4::CommonTokenStream _antlrTokenStream;
 
         public:
-            explicit Parser(SourceFile &file);
+            explicit Parser(Ptr<SourceFile> file);
 
             ~Parser() override;
 
@@ -116,7 +116,7 @@ namespace cs {
                 return _lexer;
             }
 
-            SourceFile &getSourceFile() {
+            Ptr<SourceFile> getSourceFile() {
                 return _sourceFile;
             }
         };

@@ -1,7 +1,9 @@
 #include <iostream>
 
 #include <cstdio>
-#include <covscript/compiler/parser.h>
+#include <covscript/compiler/compiler.h>
+#include <covscript/compiler/phase/assembleDefine.h>
+#include <covscript/compiler/phase/assembleScan.h>
 #include <CovScriptBaseVisitor.h>
 
 using namespace cs::compiler;
@@ -24,27 +26,34 @@ public:
     }
 };
 
-class MyErrorHandler : public antlr4::BaseErrorListener {
-    void
-    syntaxError(antlr4::Recognizer *recognizer, antlr4::Token *offendingSymbol, size_t line, size_t charPositionInLine,
-                const std::string &msg, std::exception_ptr e) override {
-        try {
-            std::rethrow_exception(e);
-        } catch (antlr4::RecognitionException &re) {
-            throw cs::compiler::SyntaxError(re.getCtx(), offendingSymbol, line, charPositionInLine, msg);
-        }
+class CustomPhase : public CompilerPhase {
+public:
+    CustomPhase() : CompilerPhase("Verify:Debug") {}
+
+    ~CustomPhase() override = default;
+
+protected:
+    void preparePhase(CompilerData &compilerData) override {
+        printf("[Verify:Debug]: %p, prepare phase\n", this);
+    }
+
+    void runPhase(CompilerData &compilerData, CovScriptParser::CompilationUnitContext *compilationUnit) override {
+        printf("[Verify:Debug]: %p, run phase with %p\n", this, compilationUnit);
+        MyVisitor myVisitor;
+        myVisitor.visitCompilationUnit(compilationUnit);
+    }
+
+    void postPhase(CompilerData &compilerData) override {
+        printf("[Verify:Debug]: %p, post phase\n", this);
     }
 };
 
 int main() {
-    auto sourceFile = CodeSourceFile("<hello>", "var s = 0");
+    auto sourceFile = makePtr<CodeSourceFile>("<hello>", "var s = 0");
     Parser parser(sourceFile);
-    MyErrorHandler errorHandler;
 
     parser.removeErrorListeners();
     parser.getLexer().removeErrorListeners();
-    parser.addErrorListener(&errorHandler);
-    parser.getLexer().addErrorListener(&errorHandler);
 
     try {
         auto compilationUnit = parser.compilationUnit();
@@ -54,6 +63,17 @@ int main() {
     } catch (SyntaxError &e) {
         parser.printSyntaxError(e);
     }
+
+    //
+    printf("WTF HERE\n");
+    CovScriptCompiler compiler;
+    compiler.registerPhase<PhaseAssembleScan>();
+    compiler.registerPhase<PhaseAssembleDefine>();
+    compiler.registerPhase<CustomPhase>();
+
+    compiler.addFile(makePtr<CodeSourceFile>("<code>", "var a = hello"));
+    compiler.addFile(makePtr<RegularSourceFile>("compiler/tests/hello.csc4"));
+    compiler.compile();
 
     return 0;
 }

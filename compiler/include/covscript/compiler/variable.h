@@ -4,6 +4,7 @@
 #pragma once
 
 #include <covscript/compiler/sharedTypes.h>
+#include <unordered_map>
 
 namespace cs {
     namespace compiler {
@@ -32,7 +33,15 @@ namespace cs {
         class LambdaType;
 
         class Type {
+        private:
+
         public:
+            Type() = default;
+
+            virtual ~Type() = default;
+
+
+
             bool isPrimitiveType() const {
                 return is<const PrimitiveType *>(this);
             }
@@ -76,10 +85,6 @@ namespace cs {
             bool isLambdaType() const {
                 return is<const LambdaType *>(this);
             }
-
-            Type() = default;
-
-            virtual ~Type() = default;
         };
 
         class PrimitiveType : public Type {

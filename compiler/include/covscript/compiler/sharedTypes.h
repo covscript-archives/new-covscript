@@ -16,6 +16,13 @@ namespace cs {
         template<typename T>
         using Ptr = std::shared_ptr<T>;
 
+        template<typename T, typename ...Args>
+        inline _LIBCPP_INLINE_VISIBILITY
+        typename std::enable_if<!std::is_array<T>::value, std::shared_ptr<T>>::type
+        makePtr(Args &&...__args) {
+            return std::shared_ptr<T>::make_shared(std::forward<Args>(__args)...);
+        }
+
         // Convenience functions to avoid lengthy dynamic_cast() != nullptr checks in many places.
         template<typename T1, typename T2>
         inline bool is(T2 *obj) { // For pointer types.

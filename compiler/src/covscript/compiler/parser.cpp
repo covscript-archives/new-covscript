@@ -28,25 +28,25 @@ namespace cs {
             }
         };
 
-        Parser::Parser(SourceFile &file)
+        Parser::Parser(Ptr<SourceFile> file)
             : _sourceFile(file),
-              _nativeStream(file.openNativeStream()),
+              _nativeStream(file->openNativeStream()),
               _antlrInputStream(*_nativeStream.get()),
               _lexer(&_antlrInputStream),
               _antlrTokenStream(&_lexer),
               CovScriptParser(&_antlrTokenStream) {
             setErrorHandler(std::make_shared<MyErrorStrategy>());
-            _antlrInputStream.name = file.getSourceName();
+            _antlrInputStream.name = file->getSourceName();
         }
 
         Parser::~Parser() = default;
 
         void Parser::printSyntaxError(SyntaxError &e) {
             printf("Syntax error at file: %s:%zd:%zd\n",
-                _sourceFile.getSourceName().c_str(),
+                _sourceFile->getSourceName().c_str(),
                 e.getLine(), e.getCharPosition());
 
-            Ptr<std::istream> sourceStream = _sourceFile.openNativeStream();
+            Ptr<std::istream> sourceStream = _sourceFile->openNativeStream();
 
 //            if (is<const RegularSourceFile *>(&_sourceFile)) {
 //                auto &file = static_cast<const RegularSourceFile &>(_sourceFile);
