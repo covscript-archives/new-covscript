@@ -9,7 +9,7 @@ namespace cs {
 	}
 } // namespace cs
 
-class cs::runtime::any final {
+class alignas(alignof(std::size_t)) cs::runtime::any final {
 public:
 	using typeid_t = std::type_index;
 	using byte_t = unsigned char;
@@ -120,7 +120,7 @@ private:
 	// 使用联合实现
 	struct stor_union {
 		// 触发小对象优化的阈值，需大于std::alignment_of<stor_base *>::value
-		static constexpr unsigned int static_stor_size = std::alignment_of<stor_base *>::value;
+		static constexpr unsigned int static_stor_size = 3*std::alignment_of<stor_base *>::value;
 		union {
 			// 使用无符号字符数组提供存储数据的原始内存空间
 			unsigned char data[static_stor_size];

@@ -6,6 +6,9 @@
 
 int main()
 {
+	std::cout << "Size of any: " << sizeof(cs::runtime::any) << std::endl;
+	std::cout << "Size of size_t: " << sizeof(std::size_t) << std::endl;
+	std::cout << "Size of string: " << sizeof(std::string) << std::endl;
 	cs::runtime::any a, b(10), c(std::string("Hello"));
 	cs::runtime::any d(a), e(b), f(c);
 	a = 3.14;
