@@ -7,11 +7,13 @@ namespace cs {
 	namespace utility {
 		class event_type final {
 		public:
-			using listener_type=std::function<bool(void *)>;
+			using listener_type = std::function<bool(void *)>;
+
 		private:
 			std::vector<listener_type> m_listener;
+
 		public:
-			event_type() = delete;
+			event_type() = default;
 
 			event_type(const event_type &) = delete;
 
@@ -27,11 +29,11 @@ namespace cs {
 
 			bool touch(void *arg)
 			{
-				for (auto &listener:m_listener)
+				for (auto &listener : m_listener)
 					if (listener(arg))
 						return true;
 				return false;
 			}
 		};
-	}
-}
+	} // namespace utility
+} // namespace cs
