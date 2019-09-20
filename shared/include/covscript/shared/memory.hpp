@@ -5,12 +5,13 @@
 
 namespace cs {
 	namespace runtime {
-		template<typename T>
+		template <typename T>
 		class stack_type final {
 			using aligned_type = typename std::aligned_storage<sizeof(T), alignof(T)>::type;
 			std::size_t m_size;
 			aligned_type *m_data;
 			T *m_start = nullptr, *m_current = nullptr;
+
 		public:
 			class iterator final {
 				friend class stack_type;
@@ -60,9 +61,9 @@ namespace cs {
 				}
 			};
 
-			stack_type(std::size_t size=512) : m_size(size)
+			stack_type(std::size_t size = 512) : m_size(size)
 			{
-				m_data = ::malloc(size*sizeof(aligned_type));
+				m_data = ::malloc(size * sizeof(aligned_type));
 				m_start = m_current = reinterpret_cast<T *>(m_data);
 			}
 
@@ -116,12 +117,12 @@ namespace cs {
 				return *(m_current - offset - 1);
 			}
 
-			template<typename...ArgsT>
-			inline void push(ArgsT &&...args)
+			template <typename... ArgsT>
+			inline void push(ArgsT &&... args)
 			{
 				if (full())
 					throw_ex<runtime_error>("Stack overflow.");
-				::new(m_current++) T(std::forward<ArgsT>(args)...);
+				::new (m_current++) T(std::forward<ArgsT>(args)...);
 			}
 
 			inline T pop()
@@ -153,11 +154,12 @@ namespace cs {
 			}
 		};
 
-		template<typename T, std::size_t blck_size, template<typename> class allocator_t=std::allocator>
+		template <typename T, std::size_t blck_size, template <typename> class allocator_t = std::allocator>
 		class allocator_type final {
 			T *mPool[blck_size];
 			allocator_t<T> mAlloc;
 			std::size_t mOffset = 0;
+
 		public:
 			allocator_type()
 			{
@@ -173,8 +175,8 @@ namespace cs {
 					mAlloc.deallocate(mPool[--mOffset], 1);
 			}
 
-			template<typename...ArgsT>
-			inline T *alloc(ArgsT &&...args)
+			template <typename... ArgsT>
+			inline T *alloc(ArgsT &&... args)
 			{
 				T *ptr = nullptr;
 				if (mOffset > 0)
@@ -194,5 +196,5 @@ namespace cs {
 					mAlloc.deallocate(ptr, 1);
 			}
 		};
-	}
-}
+	} // namespace runtime
+} // namespace cs

@@ -6,11 +6,11 @@
 namespace cs {
 	class runtime_error final : public std::exception {
 		std::string mWhat = "Runtime Error";
+
 	public:
 		runtime_error() = default;
 
-		explicit runtime_error(const std::string &str) noexcept:
-			mWhat("Runtime Error: " + str) {}
+		explicit runtime_error(const std::string &str) noexcept : mWhat("Runtime Error: " + str) {}
 
 		runtime_error(const runtime_error &) = default;
 
@@ -32,13 +32,13 @@ namespace cs {
 		utility::event_type exception_raised;
 	}
 
-	template<typename T, typename...ArgsT>
-	void throw_ex(ArgsT&&...args)
+	template <typename T, typename... ArgsT>
+	void throw_ex(ArgsT &&... args)
 	{
 		T exception(std::forward<ArgsT>(args)...);
-		std::exception &stdexcept=exception;
+		std::exception &stdexcept = exception;
 		// Handle exceptions here
 		event::exception_raised.touch(&stdexcept);
 		throw exception;
 	}
-}
+} // namespace cs
