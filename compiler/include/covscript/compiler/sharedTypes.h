@@ -14,7 +14,7 @@ namespace cs {
         using VMString = cs::shared_types::vm_string;
 
         template<typename T>
-        using Ref = std::shared_ptr<T>;
+        using Ptr = std::shared_ptr<T>;
 
         // Convenience functions to avoid lengthy dynamic_cast() != nullptr checks in many places.
         template<typename T1, typename T2>
@@ -23,7 +23,7 @@ namespace cs {
         }
 
         template<typename T1, typename T2>
-        inline bool is(Ref<T2> const &obj) { // For shared pointers.
+        inline bool is(Ptr<T2> const &obj) { // For shared pointers.
             return dynamic_cast<T1 *>(obj.get()) != nullptr;
         }
     }

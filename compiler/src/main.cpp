@@ -37,7 +37,8 @@ class MyErrorHandler : public antlr4::BaseErrorListener {
 };
 
 int main() {
-    Parser parser(SourceFile("compiler/tests/csbuild.csc4"));
+    auto sourceFile = CodeSourceFile("<hello>", "var s = 0");
+    Parser parser(sourceFile);
     MyErrorHandler errorHandler;
 
     parser.removeErrorListeners();

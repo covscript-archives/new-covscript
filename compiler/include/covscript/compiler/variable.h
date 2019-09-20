@@ -76,6 +76,10 @@ namespace cs {
             bool isLambdaType() const {
                 return is<const LambdaType *>(this);
             }
+
+            Type() = default;
+
+            virtual ~Type() = default;
         };
 
         class PrimitiveType : public Type {

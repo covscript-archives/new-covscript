@@ -4,8 +4,7 @@
 #pragma once
 
 #include <antlr4-runtime.h>
-#include <exception>
-#include <stdexcept>
+#include <covscript/compiler/sharedTypes.h>
 #include <CovScriptParser.h>
 #include <CovScriptLexer.h>
 
@@ -14,20 +13,55 @@ namespace cs {
         using namespace cs_compiler_antlr_gen;
 
         class SourceFile {
+        public:
+            virtual Ptr<std::istream> openNativeStream() = 0;
+
+            virtual const std::string &getSourceName() = 0;
+        };
+
+        class CodeSourceFile : public SourceFile {
         private:
-            bool _isFileSource;
-            std::string _source;
+            std::string _name;
+            std::string _code;
 
         public:
-            explicit SourceFile(std::string sourceName, bool isFileSource = true);
+            CodeSourceFile(std::string name, std::string code);
 
-            const std::string &getSource() const {
-                return _source;
+            const std::string &getCode() const {
+                return _code;
             }
 
-            bool isFile() const {
-                return _isFileSource;
+            Ptr<std::istream> openNativeStream() override;
+
+            const std::string &getSourceName() override {
+                return _name;
             }
+        };
+
+        class RegularSourceFile : public SourceFile {
+        private:
+            std::string _filePath;
+
+        public:
+            explicit RegularSourceFile(std::string filePath);
+
+            const std::string &getFilePath() const {
+                return _filePath;
+            }
+
+            Ptr<std::istream> openNativeStream() override;
+
+            const std::string &getSourceName() override {
+                return _filePath;
+            }
+        };
+
+        class StreamSourceFile : public SourceFile {
+        private:
+            std::string _streamName;
+
+        public:
+            // TODO: implement
         };
 
         class SyntaxError : public std::exception {
@@ -65,16 +99,14 @@ namespace cs {
 
         class Parser : public CovScriptParser {
         private:
-            std::istream *_stream;
-            SourceFile _sourceFile;
+            SourceFile &_sourceFile;
             CovScriptLexer _lexer;
+            Ref<std::istream> _nativeStream;
             antlr4::ANTLRInputStream _antlrInputStream;
             antlr4::CommonTokenStream _antlrTokenStream;
 
         public:
-            explicit Parser(SourceFile file);
-
-            explicit Parser(const std::string &code);
+            explicit Parser(SourceFile &file);
 
             virtual ~Parser() override;
 
