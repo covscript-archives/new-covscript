@@ -93,7 +93,7 @@ set(compiler_SRC
         compiler/src/covscript/compiler/bytebuffer.cpp
         compiler/include/covscript/compiler/scope.h
         compiler/include/covscript/compiler/variable.h
-        compiler/include/covscript/compiler/types.h
+        compiler/include/covscript/compiler/compilerTypes.h
         compiler/src/covscript/compiler/scope.cpp compiler/include/covscript/compiler/callState.h)
 
 set(runtime_SRC

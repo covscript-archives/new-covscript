@@ -3,7 +3,7 @@
 //
 #pragma once
 
-#include <covscript/compiler/types.h>
+#include <covscript/compiler/compilerTypes.h>
 #include <covscript/compiler/parser.h>
 
 namespace cs {
