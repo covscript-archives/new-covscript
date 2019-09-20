@@ -42,3 +42,4 @@ CMakeFiles/
 generated/
 compiler/generated/
 
+*.plist
