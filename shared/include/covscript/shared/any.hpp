@@ -20,9 +20,11 @@ public:
 	* 提示：本框架的Any使用了Small Data Optimize技术，可大幅减少堆的负担
 	* 更换内存池可能并不会提升太多性能
 	*/
-	template<typename T> using default_allocator_provider=std::allocator<T>;
+	template <typename T>
+	using default_allocator_provider = std::allocator<T>;
 	// 简化定义
-	template<typename T> using default_allocator=allocator_type<T, default_allocate_buffer_size, default_allocator_provider>;
+	template <typename T>
+	using default_allocator = allocator_type<T, default_allocate_buffer_size, default_allocator_provider>;
 
 private:
 	/*
@@ -120,7 +122,7 @@ private:
 	// 使用联合实现
 	struct stor_union {
 		// 触发小对象优化的阈值，需大于std::alignment_of<stor_base *>::value
-		static constexpr unsigned int static_stor_size = 3*std::alignment_of<stor_base *>::value;
+		static constexpr unsigned int static_stor_size = 3 * std::alignment_of<stor_base *>::value;
 		union {
 			// 使用无符号字符数组提供存储数据的原始内存空间
 			unsigned char data[static_stor_size];
@@ -166,7 +168,7 @@ private:
 	{
 		if (m_data.status != stor_status::null) {
 			get_handler()->suicide(m_data.status == stor_status::data);
-			COVSDK_LOGEV(m_data.status == stor_status::data?"Any Small Data Recycled.":"Any Normal Data Recycled.")
+			COVSDK_LOGEV(m_data.status == stor_status::data ? "Any Small Data Recycled." : "Any Normal Data Recycled.")
 		}
 	}
 
@@ -206,13 +208,13 @@ private:
 
 public:
 	// 交换函数，这里直接调用标准实现
-	inline void swap(any& val) noexcept
+	inline void swap(any &val) noexcept
 	{
 		std::swap(m_data, val.m_data);
 	}
 
 	// 右值引用重载
-	inline void swap(any&& val) noexcept
+	inline void swap(any &&val) noexcept
 	{
 		std::swap(m_data, val.m_data);
 	}
@@ -234,7 +236,7 @@ public:
 	}
 
 	// 移动构造函数
-	any(any&& val) noexcept
+	any(any &&val) noexcept
 	{
 		swap(val);
 	}
@@ -246,8 +248,8 @@ public:
 	}
 
 	// 赋值函数，实际上为重载赋值运算符
-	template<typename T>
-	any& operator=(const T& val)
+	template <typename T>
+	any &operator=(const T &val)
 	{
 		recycle();
 		store(val);
@@ -255,15 +257,15 @@ public:
 	}
 
 	// 自赋值重载
-	any& operator=(const any& val)
+	any &operator=(const any &val)
 	{
-		if(&val!=this)
+		if (&val != this)
 			copy(val);
 		return *this;
 	}
 
 	// 右值引用重载
-	any& operator=(any&& val) noexcept
+	any &operator=(any &&val) noexcept
 	{
 		swap(val);
 		return *this;
