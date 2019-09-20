@@ -37,8 +37,13 @@ namespace cs {
 	{
 		T exception(std::forward<ArgsT>(args)...);
 		std::exception &stdexcept = exception;
+		COVSDK_LOGCR(stdexcept.what())
 		// Handle exceptions here
 		event::exception_raised.touch(&stdexcept);
+#ifdef COVSCRIPT_NOEXCEPT
+		std::terminate();
+#else
 		throw exception;
+#endif
 	}
 } // namespace cs

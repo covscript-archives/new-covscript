@@ -10,5 +10,5 @@ namespace cs {
 		using vm_bool = bool;
 		using vm_char = signed char;
 		using vm_string = std::string;
-	}
-}
+	} // namespace shared_types
+} // namespace cs
