@@ -58,7 +58,7 @@ int main() {
     try {
         auto compilationUnit = parser.compilationUnit();
         MyVisitor visitor;
-        visitor.visit(compilationUnit);
+        visitor.visitCompilationUnit(compilationUnit);
 
     } catch (SyntaxError &e) {
         parser.printSyntaxError(e);
