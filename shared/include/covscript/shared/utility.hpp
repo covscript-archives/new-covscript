@@ -38,9 +38,36 @@ namespace cs {
 	} // namespace utility
 } // namespace cs
 
+/*
+* Covariant Script SDK Log System
+*
+* use COVSDK_LOGEV(message) to log a normal event
+* use COVSDK_LOGCR(message) to log a critical event
+*
+* define COVSCRIPT_SDK_DEBUG to enable the log
+* define COVSDK_LOGCR_ONLY to disable normal events
+*
+* All macros must be defined before include
+*/
+
 #ifdef COVSCRIPT_SDK_DEBUG
 #include <cstdio>
-#define cs_sdk_log_ev(msg) ::printf("[%s] In file %s, line %d: %s\n", __TIME__, __FILE__, __LINE__, msg);
+
+#ifndef COVSDK_LOGCR_ONLY
+// Event Log
+#define COVSDK_LOGEV(msg) ::printf("EV[%s] In file %s, line %d: %s\n", __TIME__, __FILE__, __LINE__, msg);
+
 #else
-#define cs_sdk_log_ev(msg)
+
+#define COVSDK_LOGEV(msg)
+
+#endif
+// Critical Event Log
+#define COVSDK_LOGCR(msg) ::printf("CR[%s] In file %s, line %d: %s\n", __TIME__, __FILE__, __LINE__, msg);
+
+#else
+
+#define COVSDK_LOGEV(msg)
+#define COVSDK_LOGCR(msg)
+
 #endif

@@ -17,7 +17,7 @@ public:
 	template<typename T> using default_allocator_provider=std::allocator<T>;
 	template<typename T> using default_allocator=allocator_type<T, default_allocate_buffer_size, default_allocator_provider>;
 
-private: 
+private:
 	/*
 	    数据存储基类
 	    使用多态实现类型擦除的关键，即抽象出类型无关的接口
@@ -146,9 +146,9 @@ private:
 
 	inline void recycle()
 	{
-		if (m_data.status != stor_status::null){
+		if (m_data.status != stor_status::null) {
 			get_handler()->suicide(m_data.status == stor_status::data);
-			cs_sdk_log_ev(m_data.status == stor_status::data?"Any Small Data Recycled.":"Any Normal Data Recycled.")
+			COVSDK_LOGEV(m_data.status == stor_status::data?"Any Small Data Recycled.":"Any Normal Data Recycled.")
 		}
 	}
 
@@ -158,12 +158,12 @@ private:
 		if (sizeof(T) <= stor_union::static_stor_size) {
 			::new (m_data.impl.data) stor_impl<T>(val);
 			m_data.status = stor_status::data;
-			cs_sdk_log_ev("Any SDO Enabled.")
+			COVSDK_LOGEV("Any SDO Enabled.")
 		}
 		else {
 			m_data.impl.ptr = stor_impl<T>::allocator.alloc(val);
 			m_data.status = stor_status::ptr;
-			cs_sdk_log_ev("Any SDO Disabled.")
+			COVSDK_LOGEV("Any SDO Disabled.")
 		}
 	}
 
@@ -174,12 +174,11 @@ private:
 			if (data.m_data.status == stor_status::ptr) {
 				recycle();
 				m_data.impl.ptr = ptr->clone();
-				cs_sdk_log_ev("Any Small Data Copied.")
+				COVSDK_LOGEV("Any Small Data Copied.")
 			}
-			else
-			{
+			else {
 				ptr->clone(m_data.impl.data);
-				cs_sdk_log_ev("Any Normal Data Copied.")
+				COVSDK_LOGEV("Any Normal Data Copied.")
 			}
 			m_data.status = data.m_data.status;
 		}
