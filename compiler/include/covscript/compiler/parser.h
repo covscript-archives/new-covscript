@@ -15,61 +15,61 @@ namespace cs {
 
         class SourceFile {
         private:
-            bool isFileSource;
-            std::string source;
+            bool _isFileSource;
+            std::string _source;
 
         public:
             explicit SourceFile(std::string sourceName, bool isFileSource = true);
 
             const std::string &getSource() const {
-                return source;
+                return _source;
             }
 
             bool isFile() const {
-                return isFileSource;
+                return _isFileSource;
             }
         };
 
         class SyntaxError : public std::exception {
         private:
-            antlr4::RuleContext *ruleContext;
-            antlr4::Token *offendingSymbol;
-            size_t line;
-            size_t charPosition;
-            std::string message;
+            antlr4::RuleContext *_ruleContext;
+            antlr4::Token *_offendingSymbol;
+            size_t _line;
+            size_t _charPosition;
+            std::string _message;
 
         public:
             SyntaxError(antlr4::RuleContext *ruleContext, antlr4::Token *offendingSymbol,
                         size_t line, size_t charPosition, std::string message);
 
             antlr4::RuleContext *getRuleContext() const {
-                return ruleContext;
+                return _ruleContext;
             }
 
             size_t getLine() const {
-                return line;
+                return _line;
             }
 
             size_t getCharPosition() const {
-                return charPosition;
+                return _charPosition;
             }
 
             const std::string &getMessage() const {
-                return message;
+                return _message;
             }
 
             antlr4::Token *getOffendingSymbol() const {
-                return offendingSymbol;
+                return _offendingSymbol;
             }
         };
 
         class Parser : public CovScriptParser {
         private:
-            std::istream *stream;
-            SourceFile sourceFile;
-            CovScriptLexer lexer;
-            antlr4::ANTLRInputStream antlrInputStream;
-            antlr4::CommonTokenStream antlrTokenStream;
+            std::istream *_stream;
+            SourceFile _sourceFile;
+            CovScriptLexer _lexer;
+            antlr4::ANTLRInputStream _antlrInputStream;
+            antlr4::CommonTokenStream _antlrTokenStream;
 
         public:
             explicit Parser(SourceFile file);
@@ -81,11 +81,11 @@ namespace cs {
             void printSyntaxError(SyntaxError &e);
 
             CovScriptLexer &getLexer() {
-                return lexer;
+                return _lexer;
             }
 
             SourceFile &getSourceFile() {
-                return sourceFile;
+                return _sourceFile;
             }
         };
     }

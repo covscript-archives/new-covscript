@@ -94,7 +94,7 @@ set(compiler_SRC
         compiler/include/covscript/compiler/scope.h
         compiler/include/covscript/compiler/variable.h
         compiler/include/covscript/compiler/types.h
-        compiler/src/covscript/compiler/scope.cpp)
+        compiler/src/covscript/compiler/scope.cpp compiler/include/covscript/compiler/callState.h)
 
 set(runtime_SRC
         runtime/include/covscript/runtime/vm_instance.hpp

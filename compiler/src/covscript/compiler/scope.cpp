@@ -7,12 +7,18 @@
 namespace cs {
     namespace compiler {
         Variable *Scope::search(const VMString &name) {
-            auto iter = this->variables.find(name);
-            return iter == this->variables.end() ? searchInParent(name) : iter->second;
+            auto iter = _variables.find(name);
+            return iter == _variables.end()
+                   ? (_parent == nullptr ? nullptr : _parent->search(name))
+                   : iter->second;
         }
 
-        Variable *Scope::searchInParent(const VMString &name) {
-            return this->parent == nullptr ? nullptr : this->parent->search(name);
+        void Scope::set(const Parameter &param, const Argument &arg) {
+            // TODO: please implement variable framework
+        }
+
+        void Scope::set(const std::pair<Parameter, Argument> &pair) {
+            set(pair.first, pair.second);
         }
     }
 }

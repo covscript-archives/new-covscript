@@ -28,31 +28,31 @@ namespace cs {
         };
 
         Parser::Parser(SourceFile file)
-            : sourceFile(std::move(file)),
-              stream(new std::ifstream(file.getSource())),
-              antlrInputStream(*stream),
-              lexer(&antlrInputStream),
-              antlrTokenStream(&lexer),
-              CovScriptParser(&antlrTokenStream) {
+            : _sourceFile(std::move(file)),
+              _stream(new std::ifstream(file.getSource())),
+              _antlrInputStream(*_stream),
+              _lexer(&_antlrInputStream),
+              _antlrTokenStream(&_lexer),
+              CovScriptParser(&_antlrTokenStream) {
             setErrorHandler(std::make_shared<MyErrorStrategy>());
         }
 
         Parser::Parser(const std::string &code)
-            : sourceFile(code, false),
-              stream(nullptr),
-              antlrInputStream(code),
-              lexer(&antlrInputStream),
-              antlrTokenStream(&lexer),
-              CovScriptParser(&antlrTokenStream) {
+            : _sourceFile(code, false),
+              _stream(nullptr),
+              _antlrInputStream(code),
+              _lexer(&_antlrInputStream),
+              _antlrTokenStream(&_lexer),
+              CovScriptParser(&_antlrTokenStream) {
             setErrorHandler(std::make_shared<MyErrorStrategy>());
         }
 
         Parser::~Parser() {
-            delete stream;
+            delete _stream;
         }
 
         void Parser::printSyntaxError(SyntaxError &e) {
-            const auto &source = sourceFile.isFile() ? sourceFile.getSource() : "<unknown>";
+            const auto &source = _sourceFile.isFile() ? _sourceFile.getSource() : "<unknown>";
 
             printf("Syntax error at file: %s:%zd:%zd\n",
                 source.c_str(), e.getLine(), e.getCharPosition());
@@ -87,12 +87,12 @@ namespace cs {
 
         SyntaxError::SyntaxError(antlr4::RuleContext *ruleContext, antlr4::Token *offendingToken,
                                  size_t line, size_t charPosition, std::string message)
-            : ruleContext(ruleContext), offendingSymbol(offendingToken), line(line),
-              charPosition(charPosition), message(std::move(message)) {
+            : _ruleContext(ruleContext), _offendingSymbol(offendingToken), _line(line),
+              _charPosition(charPosition), _message(std::move(message)) {
         }
 
         SourceFile::SourceFile(std::string sourceName, bool isFileSource)
-            : source(std::move(sourceName)), isFileSource(isFileSource) {
+            : _source(std::move(sourceName)), _isFileSource(isFileSource) {
         }
     }
 }

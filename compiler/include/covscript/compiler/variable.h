@@ -9,10 +9,13 @@ namespace cs {
     namespace compiler {
         class Variable {
         private:
-            VMString variableName;
+            VMString _variableName;
+            bool _isLiteral;
 
         public:
-            const VMString &getName() const { return variableName; }
+            bool isLiteral() const { return _isLiteral; }
+
+            const VMString &getName() const { return _variableName; }
         };
 
         class StringVariable : public Variable {
