@@ -13,8 +13,15 @@ class cs::runtime::any final {
 public:
 	using typeid_t = std::type_index;
 	using byte_t = unsigned char;
+	// 缓冲池大小，过大的值可能会适而其反
 	static constexpr std::size_t default_allocate_buffer_size = 64;
+	/*
+	* 分配器提供者，默认使用STL分配器，可根据需要替换为内存池
+	* 提示：本框架的Any使用了Small Data Optimize技术，可大幅减少堆的负担
+	* 更换内存池可能并不会提升太多性能
+	*/
 	template<typename T> using default_allocator_provider=std::allocator<T>;
+	// 简化定义
 	template<typename T> using default_allocator=allocator_type<T, default_allocate_buffer_size, default_allocator_provider>;
 
 private:
@@ -31,7 +38,7 @@ private:
 		stor_base(const stor_base &) = default;
 		// 析构函数，声明为虚函数并使用default实现
 		virtual ~stor_base() = default;
-		// RTTI类型函数
+		// RTTI类型函数，返回类型信息
 		virtual std::type_index type() const noexcept = 0;
 		// 自杀函数，释放占用的资源
 		virtual void suicide(bool) = 0;
@@ -102,24 +109,33 @@ private:
 	    实现小对象优化
 	    减少内存分配瓶颈
 	*/
+
+	// 存储状态，分别为无数据、未触发优化、已触发优化
 	enum class stor_status {
 		null,
 		ptr,
 		data
 	};
 
+	// 使用联合实现
 	struct stor_union {
 		// 触发小对象优化的阈值，需大于std::alignment_of<stor_base *>::value
 		static constexpr unsigned int static_stor_size = std::alignment_of<stor_base *>::value;
 		union {
+			// 使用无符号字符数组提供存储数据的原始内存空间
 			unsigned char data[static_stor_size];
+			// 超出大小阈值的数据即存储在堆上
 			stor_base *ptr;
 		} impl;
+		// 存储状态
 		stor_status status = stor_status::null;
 	};
 
 	stor_union m_data;
 
+	// 内部方法封装
+
+	// 获取stor_base指针方法的封装
 	inline stor_base *get_handler()
 	{
 		switch (m_data.status) {
@@ -132,6 +148,7 @@ private:
 		}
 	}
 
+	// 常量重载
 	inline const stor_base *get_handler() const
 	{
 		switch (m_data.status) {
@@ -144,6 +161,7 @@ private:
 		}
 	}
 
+	// 回收方法的封装
 	inline void recycle()
 	{
 		if (m_data.status != stor_status::null) {
@@ -152,6 +170,7 @@ private:
 		}
 	}
 
+	// 存储方法的封装
 	template <typename T>
 	void store(const T &val)
 	{
@@ -167,6 +186,7 @@ private:
 		}
 	}
 
+	// 复制方法的封装
 	void copy(const any &data)
 	{
 		if (data.m_data.status != stor_status::null) {
@@ -174,35 +194,91 @@ private:
 			if (data.m_data.status == stor_status::ptr) {
 				recycle();
 				m_data.impl.ptr = ptr->clone();
-				COVSDK_LOGEV("Any Small Data Copied.")
+				COVSDK_LOGEV("Any Normal Data Copied.")
 			}
 			else {
 				ptr->clone(m_data.impl.data);
-				COVSDK_LOGEV("Any Normal Data Copied.")
+				COVSDK_LOGEV("Any Small Data Copied.")
 			}
 			m_data.status = data.m_data.status;
 		}
 	}
 
 public:
+	// 交换函数，这里直接调用标准实现
+	inline void swap(any& val) noexcept
+	{
+		std::swap(m_data, val.m_data);
+	}
+
+	// 右值引用重载
+	inline void swap(any&& val) noexcept
+	{
+		std::swap(m_data, val.m_data);
+	}
+
+	// 默认构造函数
 	any() {}
 
+	// 自定义构造函数，未标记为explicit以允许隐式转换
 	template <typename T>
 	any(const T &val)
 	{
 		store(val);
 	}
 
+	// 复制构造函数
 	any(const any &val)
 	{
 		copy(val);
 	}
 
+	// 移动构造函数
+	any(any&& val) noexcept
+	{
+		swap(val);
+	}
+
+	// 析构函数
 	~any()
 	{
 		recycle();
 	}
 
+	// 赋值函数，实际上为重载赋值运算符
+	template<typename T>
+	any& operator=(const T& val)
+	{
+		recycle();
+		store(val);
+		return *this;
+	}
+
+	// 自赋值重载
+	any& operator=(const any& val)
+	{
+		if(&val!=this)
+			copy(val);
+		return *this;
+	}
+
+	// 右值引用重载
+	any& operator=(any&& val) noexcept
+	{
+		swap(val);
+		return *this;
+	}
+
+	// 获取存储数据的类型，若为空则返回void
+	std::type_index data_type() const noexcept
+	{
+		if (m_data.status == stor_status::null)
+			return typeid(void);
+		else
+			return get_handler()->type();
+	}
+
+	// 提取数据方法封装
 	template <typename T>
 	T &get()
 	{
@@ -213,6 +289,7 @@ public:
 		return static_cast<stor_impl<T> *>(get_handler())->get_data();
 	}
 
+	// 常量重载
 	template <typename T>
 	const T &get() const
 	{
