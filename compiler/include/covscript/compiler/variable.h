@@ -3,7 +3,7 @@
 //
 #pragma once
 
-#include <covscript/compiler/compilerTypes.h>
+#include <covscript/compiler/sharedTypes.h>
 
 namespace cs {
     namespace compiler {

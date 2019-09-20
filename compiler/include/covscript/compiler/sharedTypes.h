@@ -1,5 +1,5 @@
 //
-// Created by kiva on 2019/9/19.
+// Created by kiva on 2019/9/20.
 //
 #pragma once
 
@@ -27,6 +27,4 @@ namespace cs {
             return dynamic_cast<T1 *>(obj.get()) != nullptr;
         }
     }
-
 }
-
