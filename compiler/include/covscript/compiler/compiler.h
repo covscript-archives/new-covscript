@@ -12,7 +12,7 @@ namespace cs {
     namespace compiler {
         class CompilerData {
         public:
-            using CompileFiles = std::unordered_map<Ptr<SourceFile>, CovScriptParser::CompilationUnitContext *>;
+            using CompileFiles = std::unordered_map<Ptr<SourceFile>, Parser *>;
 
         private:
             Scope *_globalScope;
@@ -81,14 +81,24 @@ namespace cs {
             }
         };
 
+        class CompilerErrorHandler : public antlr4::BaseErrorListener {
+            void
+            syntaxError(antlr4::Recognizer *recognizer, antlr4::Token *offendingSymbol,
+                        size_t line, size_t charPositionInLine,
+                        const std::string &msg, std::exception_ptr e) override;
+        };
+
         class CovScriptCompiler : public BaseCompiler {
+        private:
+            CompilerErrorHandler _errorHandler;
+
         private:
             void constructASTs();
 
         public:
             CovScriptCompiler() = default;
 
-            ~CovScriptCompiler() override = default;
+            ~CovScriptCompiler() override;
 
             void addFile(const Ptr<SourceFile> &file) {
                 _privateData.getCompileFiles()[file] = nullptr;

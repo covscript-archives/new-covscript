@@ -40,7 +40,7 @@ protected:
     void runPhase(CompilerData &compilerData, CovScriptParser::CompilationUnitContext *compilationUnit) override {
         printf("[Verify:Debug]: %p, run phase with %p\n", this, compilationUnit);
         MyVisitor myVisitor;
-        myVisitor.visitCompilationUnit(compilationUnit);
+        myVisitor.visit(compilationUnit);
     }
 
     void postPhase(CompilerData &compilerData) override {

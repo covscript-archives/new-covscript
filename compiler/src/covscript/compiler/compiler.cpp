@@ -5,22 +5,21 @@
 
 namespace cs {
     namespace compiler {
-        class CompilerErrorHandler : public antlr4::BaseErrorListener {
-            void
-            syntaxError(antlr4::Recognizer *recognizer, antlr4::Token *offendingSymbol, size_t line,
-                        size_t charPositionInLine,
-                        const std::string &msg, std::exception_ptr e) override {
-                try {
-                    std::rethrow_exception(e);
-                } catch (antlr4::RecognitionException &re) {
-                    // TODO: use CovSDK
-                    throw cs::compiler::SyntaxError(re.getCtx(), offendingSymbol, line, charPositionInLine, msg);
-                }
-            }
-        };
-
         CompilerPhase::CompilerPhase(VMString _phaseName)
             : _phaseName(std::move(_phaseName)) {
+        }
+
+        void CompilerErrorHandler::syntaxError(antlr4::Recognizer *recognizer,
+                                               antlr4::Token *offendingSymbol,
+                                               size_t line, size_t charPositionInLine,
+                                               const std::string &msg,
+                                               std::exception_ptr e) {
+            try {
+                std::rethrow_exception(e);
+            } catch (antlr4::RecognitionException &re) {
+                // TODO: use CovSDK
+                throw cs::compiler::SyntaxError(re.getCtx(), offendingSymbol, line, charPositionInLine, msg);
+            }
         }
 
         void BaseCompiler::preparePhase(Ptr<CompilerPhase> &phase) {
@@ -41,30 +40,34 @@ namespace cs {
             for (auto &phase : _compilerPhases) {
                 for (auto &elem : _privateData.getCompileFiles()) {
                     preparePhase(phase);
-                    runPhase(phase, elem.second);
+                    runPhase(phase, elem.second->compilationUnit());
                     postPhase(phase);
                 }
             }
         }
 
         void CovScriptCompiler::constructASTs() {
-            CompilerErrorHandler errorHandler;
-
             for (auto &elem : _privateData.getCompileFiles()) {
-                Parser parser(elem.first);
+                auto parser = new Parser(elem.first);
 
-                parser.removeErrorListeners();
-                parser.getLexer().removeErrorListeners();
-                parser.addErrorListener(&errorHandler);
-                parser.getLexer().addErrorListener(&errorHandler);
+                parser->removeErrorListeners();
+                parser->getLexer().removeErrorListeners();
+                parser->addErrorListener(&_errorHandler);
+                parser->getLexer().addErrorListener(&_errorHandler);
 
                 try {
-                    elem.second = parser.compilationUnit();
+                    elem.second = parser;
 
                 } catch (SyntaxError &e) {
                     // TODO: use CovSDK
-                    parser.printSyntaxError(e);
+                    parser->printSyntaxError(e);
                 }
+            }
+        }
+
+        CovScriptCompiler::~CovScriptCompiler() {
+            for (auto &elem : _privateData.getCompileFiles()) {
+                delete elem.second;
             }
         }
     }
