@@ -7,7 +7,7 @@ namespace cs {
 	namespace runtime {
 		template <typename T>
 		class stack_type final {
-			using aligned_type = typename std::aligned_storage<sizeof(T), alignof(T)>::type;
+			using aligned_type = typename std::aligned_storage<sizeof(T), std::alignment_of<T>::value>::type;
 			std::size_t m_size;
 			aligned_type *m_data;
 			T *m_start = nullptr, *m_current = nullptr;
@@ -194,6 +194,32 @@ namespace cs {
 					mPool[mOffset++] = ptr;
 				else
 					mAlloc.deallocate(ptr, 1);
+			}
+		};
+
+		template <typename T, std::size_t blck_size, template <typename> class allocator_t = std::allocator>
+		class plain_allocator_type final {
+			allocator_t<T> mAlloc;
+
+		public:
+			plain_allocator_type() = default;
+
+			plain_allocator_type(const plain_allocator_type &) = delete;
+
+			~plain_allocator_type() = default;
+
+			template <typename... ArgsT>
+			inline T *alloc(ArgsT &&... args)
+			{
+				T *ptr = mAlloc.allocate(1);
+				mAlloc.construct(ptr, std::forward<ArgsT>(args)...);
+				return ptr;
+			}
+
+			inline void free(T *ptr)
+			{
+				mAlloc.destroy(ptr);
+				mAlloc.deallocate(ptr, 1);
 			}
 		};
 	} // namespace runtime

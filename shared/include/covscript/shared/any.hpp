@@ -14,7 +14,7 @@ public:
 	using typeid_t = std::type_index;
 	using byte_t = unsigned char;
 	// 缓冲池大小，过大的值可能会适而其反
-	static constexpr std::size_t default_allocate_buffer_size = 64;
+	static constexpr std::size_t default_allocate_buffer_size = 16;
 	/*
 	* 分配器提供者，默认使用STL分配器，可根据需要替换为内存池
 	* 提示：本框架的Any使用了Small Data Optimize技术，可大幅减少堆的负担
@@ -176,7 +176,7 @@ private:
 	template <typename T>
 	void store(const T &val)
 	{
-		if (sizeof(T) <= stor_union::static_stor_size) {
+		if (sizeof(stor_impl<T>) <= stor_union::static_stor_size) {
 			::new (m_data.impl.data) stor_impl<T>(val);
 			m_data.status = stor_status::data;
 			COVSDK_LOGEV("Any SDO Enabled.")
