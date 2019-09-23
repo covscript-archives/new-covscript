@@ -9,7 +9,7 @@ namespace cs {
 	}
 } // namespace cs
 
-class alignas(alignof(std::size_t)) cs::runtime::any final {
+class cs::runtime::any final {
 public:
 	using typeid_t = std::type_index;
 	using byte_t = unsigned char;
