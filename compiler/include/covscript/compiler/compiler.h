@@ -3,8 +3,15 @@
 //
 #pragma once
 
+#ifdef CS_COMPILER_PHASE_IMPL
+#define PHASE_LOG(msg) COVSDK_LOGEV(msg)
+#else
+#define PHASE_LOG(msg)
+#endif
+
 #include <covscript/compiler/scope.h>
 #include <covscript/compiler/parser.h>
+#include <covscript/shared/utility.hpp>
 #include <unordered_map>
 #include <list>
 
