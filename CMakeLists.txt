@@ -97,7 +97,11 @@ set(compiler_SRC
         compiler/include/covscript/compiler/callState.h
         compiler/include/covscript/compiler/compiler.h
         compiler/include/covscript/compiler/sharedTypes.h
-        compiler/src/covscript/compiler/compiler.cpp compiler/include/covscript/compiler/phase/assembleScan.h compiler/src/covscript/compiler/phase/assembleScan.cpp compiler/include/covscript/compiler/phase/assembleDefine.h compiler/src/covscript/compiler/phase/assembleDefine.cpp)
+        compiler/src/covscript/compiler/compiler.cpp
+        compiler/include/covscript/compiler/phase/assembleScan.h
+        compiler/src/covscript/compiler/phase/assembleScan.cpp
+        compiler/include/covscript/compiler/phase/assembleDefine.h
+        compiler/src/covscript/compiler/phase/assembleDefine.cpp)
 
 set(runtime_SRC
         runtime/include/covscript/runtime/vm_instance.hpp
