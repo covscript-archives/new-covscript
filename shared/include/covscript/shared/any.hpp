@@ -58,10 +58,9 @@ private:
 	*/
 	template <typename T>
 	class stor_impl : public stor_base {
-		// 实际存储的数据
-		T m_data;
-
 	public:
+		// 实际存储的数据
+		T data;
 		// 分配器
 		static default_allocator<stor_impl<T>> allocator;
 		// 默认构造函数，使用default实现
@@ -71,7 +70,7 @@ private:
 		// 禁用复制构造函数
 		stor_impl(const stor_impl &) = delete;
 		// 自定义构造函数，构造存储的数据
-		stor_impl(const T &dat) : m_data(dat) {}
+		stor_impl(const T &dat) : data(dat) {}
 		// 以下五个函数为实现基类的virtual函数
 		std::type_index type() const noexcept override
 		{
@@ -86,25 +85,16 @@ private:
 		}
 		void clone(byte_t *ptr) const override
 		{
-			::new (ptr) stor_impl<T>(m_data);
+			::new (ptr) stor_impl<T>(data);
 		}
 		stor_base *clone() const override
 		{
-			return allocator.alloc(m_data);
+			return allocator.alloc(data);
 		}
 		type_support *extension() const override
 		{
 			// NOT IMPLEMENTED YET
 			return nullptr;
-		}
-		// 访问数据
-		inline T &get_data()
-		{
-			return m_data;
-		}
-		inline const T &get_data() const
-		{
-			return m_data;
 		}
 	};
 	/*
@@ -142,7 +132,7 @@ private:
 	{
 		switch (m_data.status) {
 		case stor_status::null:
-			return nullptr;
+			throw_ex<runtime_error>("Access null any object.");
 		case stor_status::data:
 			return reinterpret_cast<stor_base *>(m_data.impl.data);
 		case stor_status::ptr:
@@ -155,7 +145,7 @@ private:
 	{
 		switch (m_data.status) {
 		case stor_status::null:
-			return nullptr;
+			throw_ex<runtime_error>("Access null any object.");
 		case stor_status::data:
 			return reinterpret_cast<const stor_base *>(m_data.impl.data);
 		case stor_status::ptr:
@@ -174,7 +164,7 @@ private:
 
 	// 存储方法的封装
 	template <typename T>
-	void store(const T &val)
+	inline void store(const T &val)
 	{
 		if (sizeof(stor_impl<T>) <= stor_union::static_stor_size) {
 			::new (m_data.impl.data) stor_impl<T>(val);
@@ -189,7 +179,7 @@ private:
 	}
 
 	// 复制方法的封装
-	void copy(const any &data)
+	inline void copy(const any &data)
 	{
 		if (data.m_data.status != stor_status::null) {
 			const stor_base *ptr = data.get_handler();
@@ -249,7 +239,7 @@ public:
 
 	// 赋值函数，实际上为重载赋值运算符
 	template <typename T>
-	any &operator=(const T &val)
+	inline any &operator=(const T &val)
 	{
 		recycle();
 		store(val);
@@ -257,7 +247,7 @@ public:
 	}
 
 	// 自赋值重载
-	any &operator=(const any &val)
+	inline any &operator=(const any &val)
 	{
 		if (&val != this)
 			copy(val);
@@ -265,14 +255,14 @@ public:
 	}
 
 	// 右值引用重载
-	any &operator=(any &&val) noexcept
+	inline any &operator=(any &&val) noexcept
 	{
 		swap(val);
 		return *this;
 	}
 
 	// 获取存储数据的类型，若为空则返回void
-	std::type_index data_type() const noexcept
+	inline std::type_index data_type() const noexcept
 	{
 		if (m_data.status == stor_status::null)
 			return typeid(void);
@@ -282,24 +272,22 @@ public:
 
 	// 提取数据方法封装
 	template <typename T>
-	T &get()
+	inline T &get()
 	{
-		if (m_data.status == stor_status::null)
-			throw_ex<runtime_error>("Access null any object.");
-		if (get_handler()->type() != typeid(T))
+		stor_base *ptr = get_handler();
+		if (ptr->type() != typeid(T))
 			throw_ex<runtime_error>("Access wrong type of any.");
-		return static_cast<stor_impl<T> *>(get_handler())->get_data();
+		return static_cast<stor_impl<T> *>(ptr)->data;
 	}
 
 	// 常量重载
 	template <typename T>
-	const T &get() const
+	inline const T &get() const
 	{
-		if (m_data.status == stor_status::null)
-			throw_ex<runtime_error>("Access null any object.");
-		if (get_handler()->type() != typeid(T))
+		const stor_base *ptr = get_handler();
+		if (ptr->type() != typeid(T))
 			throw_ex<runtime_error>("Access wrong type of any.");
-		return static_cast<const stor_impl<T> *>(get_handler())->get_data();
+		return static_cast<const stor_impl<T> *>(ptr)->data;
 	}
 };
 
