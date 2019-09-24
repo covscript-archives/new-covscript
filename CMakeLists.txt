@@ -101,7 +101,8 @@ set(compiler_SRC
         compiler/include/covscript/compiler/phase/assembleScan.h
         compiler/src/covscript/compiler/phase/assembleScan.cpp
         compiler/include/covscript/compiler/phase/assembleDefine.h
-        compiler/src/covscript/compiler/phase/assembleDefine.cpp)
+        compiler/src/covscript/compiler/phase/assembleDefine.cpp
+        compiler/src/covscript/compiler/variable.cpp)
 
 set(runtime_SRC
         runtime/include/covscript/runtime/vm_instance.hpp
@@ -113,7 +114,7 @@ set(shared_SRC
         shared/include/covscript/shared/memory.hpp
         shared/include/covscript/shared/utility.hpp
         shared/include/covscript/shared/shared_types.hpp
-        )
+        shared/src/definitions.cpp)
 
 set(covscript_SRC
         ${compiler_SRC}
@@ -150,21 +151,54 @@ add_executable(compiler
 
 target_link_libraries(compiler covscript4)
 
-#### Benchmarks and Tests
-macro(add_benchmark_target name)
-    add_executable(bench-${name}
+#### Compiler Benchmarks and Tests
+macro(add_compiler_benchmark_target name)
+    add_executable(compiler-bench-${name}
             compiler/benchmarks/bench-${name}.cpp
-            compiler/benchmarks/BenchmarkHelper.h)
-    target_link_libraries(bench-${name} covscript4)
-    add_test(${name} bench-${name})
+            shared/benchmarks/BenchmarkHelper.h)
+    target_link_libraries(compiler-bench-${name} covscript4)
+    add_test(${name} compiler-bench-${name})
 endmacro()
 
-macro(add_test_target name)
-    add_executable(test-${name} compiler/tests/test-${name}.cpp)
-    target_link_libraries(test-${name} covscript4)
-    add_test(${name} test-${name})
+macro(add_compiler_test_target name)
+    add_executable(compiler-test-${name} compiler/tests/test-${name}.cpp)
+    target_link_libraries(compiler-test-${name} covscript4)
+    add_test(${name} compiler-test-${name})
 endmacro()
 
-add_benchmark_target(copy)
-add_benchmark_target(bytebuffer)
+#### Runtime Benchmarks and Tests
+macro(add_runtime_benchmark_target name)
+    add_executable(runtime-bench-${name}
+            runtime/benchmarks/bench-${name}.cpp
+            shared/benchmarks/BenchmarkHelper.h)
+    target_link_libraries(runtime-bench-${name} covscript4)
+    add_test(${name} runtime-bench-${name})
+endmacro()
 
+macro(add_runtime_test_target name)
+    add_executable(runtime-test-${name} runtime/tests/test-${name}.cpp)
+    target_link_libraries(runtime-test-${name} covscript4)
+    add_test(${name} runtime-test-${name})
+endmacro()
+
+#### Shared Benchmarks and Tests
+macro(add_shared_benchmark_target name)
+    add_executable(shared-bench-${name}
+            shared/benchmarks/bench-${name}.cpp
+            shared/benchmarks/BenchmarkHelper.h)
+    target_link_libraries(shared-bench-${name} covscript4)
+    add_test(${name} shared-bench-${name})
+endmacro()
+
+macro(add_shared_test_target name)
+    add_executable(shared-test-${name} shared/tests/test-${name}.cpp)
+    target_link_libraries(shared-test-${name} covscript4)
+    add_test(${name} shared-test-${name})
+endmacro()
+
+add_compiler_benchmark_target(copy)
+add_compiler_benchmark_target(bytebuffer)
+add_compiler_test_target(typeflags)
+
+add_shared_benchmark_target(any)
+add_shared_test_target(any)

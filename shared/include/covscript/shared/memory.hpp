@@ -4,7 +4,7 @@
 #include <cstddef>
 
 namespace cs {
-	namespace runtime {
+	namespace shared {
 		template <typename T>
 		class stack_type final {
 			using aligned_type = typename std::aligned_storage<sizeof(T), alignof(T)>::type;
@@ -196,5 +196,5 @@ namespace cs {
 					mAlloc.deallocate(ptr, 1);
 			}
 		};
-	} // namespace runtime
+	} // namespace shared
 } // namespace cs

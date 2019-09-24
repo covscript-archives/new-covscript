@@ -9,7 +9,7 @@
 #include "tree/TerminalNodeImpl.h"
 #include "misc/Interval.h"
 
-#include "support/Any.h"
+#include "support/definitions.h"
 
 namespace antlr4 {
 namespace tree {

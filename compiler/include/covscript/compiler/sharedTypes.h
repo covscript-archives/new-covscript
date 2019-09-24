@@ -4,34 +4,30 @@
 #pragma once
 
 #include <covscript/shared/shared_types.hpp>
+#include <covscript/shared/exception.hpp>
 
 namespace cs {
     namespace compiler {
-        using VMInt = cs::shared_types::vm_int;
-        using VMFloat = cs::shared_types::vm_float;
-        using VMBool = cs::shared_types::vm_bool;
-        using VMChar = cs::shared_types::vm_char;
-        using VMString = cs::shared_types::vm_string;
+        using VMInt = cs::shared::vm_int;
+        using VMFloat = cs::shared::vm_float;
+        using VMBool = cs::shared::vm_bool;
+        using VMChar = cs::shared::vm_char;
+        using VMString = cs::shared::vm_string;
+
+        using RuntimeException = cs::shared::runtime_error;
+
+        template<typename T, typename... ArgsT>
+        void compilerThrow(ArgsT &&... args) {
+            cs::shared::throw_ex<T>(std::forward<ArgsT>(args)...);
+        }
 
         template<typename T>
         using Ptr = std::shared_ptr<T>;
 
         template<typename T, typename ...Args>
-        inline _LIBCPP_INLINE_VISIBILITY
         typename std::enable_if<!std::is_array<T>::value, std::shared_ptr<T>>::type
         makePtr(Args &&...__args) {
             return std::shared_ptr<T>::make_shared(std::forward<Args>(__args)...);
-        }
-
-        // Convenience functions to avoid lengthy dynamic_cast() != nullptr checks in many places.
-        template<typename T1, typename T2>
-        inline bool is(T2 *obj) { // For pointer types.
-            return dynamic_cast<typename std::add_const<T1>::type>(obj) != nullptr;
-        }
-
-        template<typename T1, typename T2>
-        inline bool is(Ptr<T2> const &obj) { // For shared pointers.
-            return dynamic_cast<T1 *>(obj.get()) != nullptr;
         }
     }
 }

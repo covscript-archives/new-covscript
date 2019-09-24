@@ -2,6 +2,7 @@
 // Created by kiva on 2019/8/25.
 //
 #include <covscript/compiler/bytebuffer.h>
+#include <covscript/compiler/sharedTypes.h>
 #include <cstring>
 #include <cstdlib>
 #include <cassert>
@@ -36,8 +37,10 @@ namespace cs {
             if (_buffer == nullptr) {
                 // The buffer has not been allocated
                 _buffer = static_cast<byte *>(malloc(sizeof(_buffer[0]) * _bufferLength));
-                // TODO: replace with EH
-                assert(_buffer != nullptr);
+
+                if (!_buffer) {
+                    compilerThrow<RuntimeException>("growBuffer(): malloc failed");
+                }
                 return;
             }
 
@@ -53,8 +56,7 @@ namespace cs {
                 _bufferLength = fitSize;
             } else {
                 // Nothing changed when allocation failed
-                // TODO: replace with EH
-                assert(false);
+                compilerThrow<RuntimeException>("growBuffer(): realloc failed");
             }
         }
 
@@ -253,26 +255,26 @@ namespace cs {
 
         void ByteBuffer::writeInt16AtLE(int index, int16_t value) {
             _buffer[index++] = value & 0xFF;
-            _buffer[index]   = (value >> 8) & 0xFF;
+            _buffer[index] = (value >> 8) & 0xFF;
         }
 
         void ByteBuffer::writeInt16AtBE(int index, int16_t value) {
             _buffer[index++] = (value >> 8) & 0xFF;
-            _buffer[index]   = value & 0xFF;
+            _buffer[index] = value & 0xFF;
         }
 
         void ByteBuffer::writeInt32AtLE(int index, int32_t value) {
             _buffer[index++] = value & 0xFF;
             _buffer[index++] = (value >> 8) & 0xFF;
             _buffer[index++] = (value >> 16) & 0xFF;
-            _buffer[index]   = (value >> 24) & 0xFF;
+            _buffer[index] = (value >> 24) & 0xFF;
         }
 
         void ByteBuffer::writeInt32AtBE(int index, int32_t value) {
             _buffer[index++] = (value >> 24) & 0xFF;
             _buffer[index++] = (value >> 16) & 0xFF;
             _buffer[index++] = (value >> 8) & 0xFF;
-            _buffer[index]   = value & 0xFF;
+            _buffer[index] = value & 0xFF;
         }
 
         void ByteBuffer::writeInt64AtLE(int index, int64_t value) {
@@ -283,7 +285,7 @@ namespace cs {
             _buffer[index++] = (value >> 32) & 0xFF;
             _buffer[index++] = (value >> 40) & 0xFF;
             _buffer[index++] = (value >> 48) & 0xFF;
-            _buffer[index]   = (value >> 56) & 0xFF;
+            _buffer[index] = (value >> 56) & 0xFF;
         }
 
         void ByteBuffer::writeInt64AtBE(int index, int64_t value) {

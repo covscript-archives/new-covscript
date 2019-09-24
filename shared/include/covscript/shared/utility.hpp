@@ -6,7 +6,7 @@
 #include <thread>
 
 namespace cs {
-	namespace utility {
+	namespace shared {
 		class event_type final {
 		public:
 			using listener_type = std::function<bool(void *)>;
@@ -113,10 +113,7 @@ namespace cs {
 				return end - begin;
 			}
 		};
-
-		std::chrono::time_point<std::chrono::high_resolution_clock>
-		timer::m_timer(std::chrono::high_resolution_clock::now());
-	} // namespace utility
+	} // namespace shared
 } // namespace cs
 
 /*

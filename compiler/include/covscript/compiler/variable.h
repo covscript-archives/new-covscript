@@ -8,8 +8,47 @@
 
 namespace cs {
     namespace compiler {
+        using TypeFlag = unsigned int;
+
+        class TypeFlags {
+        public:
+            TypeFlags() = delete;
+            TypeFlags(const TypeFlags &) = delete;
+            TypeFlags(TypeFlags &&) = delete;
+
+            enum {
+                TYPE_UNKNOWN    = 0x0000,
+
+                PRIMITIVE       = 0x1000,
+                NUMERIC         = 0x1100,
+                INT             = 0x1101,
+                FLOAT           = 0x1102,
+                BOOL            = 0x1201,
+                CHAR            = 0x1202,
+                STRING          = 0x1204,
+
+                OBJECT          = 0x2000,
+                CALLABLE        = 0x2100,
+                FUNCTION        = 0x2101,
+                LAMBDA          = 0x2102,
+            };
+
+            static bool hasFlag(TypeFlag typeFlag, TypeFlag check) {
+                return (typeFlag & check) == check;
+            }
+
+            static void setFlag(TypeFlag &current, TypeFlag add) {
+                current = add;
+            }
+
+            static void clearFlag(TypeFlag &current, TypeFlag clear) {
+                current &= ~clear;
+            }
+        };
+
         class Type;
 
+        ////////////////////// Primitive Types
         class PrimitiveType;
 
         class NumericType;
@@ -23,101 +62,140 @@ namespace cs {
         class CharType;
 
         class StringType;
+        //////////////////////////////////////
 
-        class ClassType;
+        ////////////////////// Object Types
+        class ObjectType;
 
         class CallableType;
 
         class FunctionType;
 
         class LambdaType;
+        //////////////////////////////////////
 
         class Type {
         private:
+            TypeFlag _typeFlag;
 
         public:
-            Type() = default;
+            explicit Type(TypeFlag typeFlag);
 
             virtual ~Type() = default;
 
-
+            TypeFlag getTypeFlag() const {
+                return _typeFlag;
+            }
 
             bool isPrimitiveType() const {
-                return is<const PrimitiveType *>(this);
+                return TypeFlags::hasFlag(getTypeFlag(), TypeFlags::PRIMITIVE);
             }
 
             bool isNumericType() const {
-                return is<const NumericType *>(this);
+                return TypeFlags::hasFlag(getTypeFlag(), TypeFlags::NUMERIC);
             }
 
             bool isIntType() const {
-                return is<const IntType *>(this);
+                return TypeFlags::hasFlag(getTypeFlag(), TypeFlags::INT);
             }
 
             bool isFloatType() const {
-                return is<const FloatType *>(this);
+                return TypeFlags::hasFlag(getTypeFlag(), TypeFlags::FLOAT);
             }
 
             bool isBoolType() const {
-                return is<const BoolType *>(this);
+                return TypeFlags::hasFlag(getTypeFlag(), TypeFlags::BOOL);
             }
 
             bool isCharType() const {
-                return is<const CharType *>(this);
+                return TypeFlags::hasFlag(getTypeFlag(), TypeFlags::CHAR);
             }
 
             bool isStringType() const {
-                return is<const StringType *>(this);
+                return TypeFlags::hasFlag(getTypeFlag(), TypeFlags::STRING);
             }
 
             bool isObjectType() const {
-                return is<const ClassType *>(this);
+                return TypeFlags::hasFlag(getTypeFlag(), TypeFlags::OBJECT);
             }
 
             bool isCallableType() const {
-                return is<const CallableType *>(this);
+                return TypeFlags::hasFlag(getTypeFlag(), TypeFlags::CALLABLE);
             }
 
             bool isFunctionType() const {
-                return is<const FunctionType *>(this);
+                return TypeFlags::hasFlag(getTypeFlag(), TypeFlags::FUNCTION);
             }
 
             bool isLambdaType() const {
-                return is<const LambdaType *>(this);
+                return TypeFlags::hasFlag(getTypeFlag(), TypeFlags::LAMBDA);
             }
         };
 
         class PrimitiveType : public Type {
+        public:
+            explicit PrimitiveType(TypeFlag typeFlag);
+            ~PrimitiveType() override = default;
         };
 
         class NumericType : public PrimitiveType {
+        public:
+            explicit NumericType(TypeFlag typeFlag);
+            ~NumericType() override = default;
         };
 
         class IntType : public NumericType {
+        public:
+            IntType();
+            ~IntType() override = default;
         };
 
         class FloatType : public NumericType {
+        public:
+            FloatType();
+            ~FloatType() override = default;
         };
 
         class StringType : public PrimitiveType {
+        public:
+            StringType();
+            ~StringType() override = default;
         };
 
         class CharType : public PrimitiveType {
+        public:
+            CharType();
+            ~CharType() override = default;
         };
 
         class BoolType : public PrimitiveType {
+        public:
+            BoolType();
+            ~BoolType() override = default;
         };
 
-        class ClassType : public Type {
+        class ObjectType : public Type {
+        public:
+            ObjectType();
+            ~ObjectType() override = default;
         };
 
         class CallableType : public Type {
+        public:
+            explicit CallableType(TypeFlag typeFlag);
+            ~CallableType() override = default;
         };
 
         class FunctionType : public CallableType {
+        public:
+            FunctionType();
+            ~FunctionType() override = default;
         };
 
         class LambdaType : public CallableType {
+        public:
+            LambdaType();
+            ~LambdaType() override = default;
         };
 
         class Variable {

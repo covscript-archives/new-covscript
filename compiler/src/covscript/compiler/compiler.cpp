@@ -17,8 +17,7 @@ namespace cs {
             try {
                 std::rethrow_exception(e);
             } catch (antlr4::RecognitionException &re) {
-                // TODO: use CovSDK
-                throw cs::compiler::SyntaxError(re.getCtx(), offendingSymbol, line, charPositionInLine, msg);
+                compilerThrow<SyntaxError>(re.getCtx(), offendingSymbol, line, charPositionInLine, msg);
             }
         }
 
@@ -54,14 +53,7 @@ namespace cs {
                 parser->getLexer().removeErrorListeners();
                 parser->addErrorListener(&_errorHandler);
                 parser->getLexer().addErrorListener(&_errorHandler);
-
-                try {
-                    elem.second = parser;
-
-                } catch (SyntaxError &e) {
-                    // TODO: use CovSDK
-                    parser->printSyntaxError(e);
-                }
+                elem.second = parser;
             }
         }
 
