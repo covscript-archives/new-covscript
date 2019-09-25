@@ -59,7 +59,7 @@ namespace cs {
 
             printf("    %s\n", line.c_str());
             printf("    ");
-            for (int i = 0; i < e.getCharPosition(); ++i) {
+            for (size_t i = 0; i < e.getCharPosition(); ++i) {
                 putchar(' ');
             }
             putchar('^');
@@ -85,12 +85,12 @@ namespace cs {
             : _filePath(std::move(filePath)) {
         }
 
-        Ptr<std::istream> RegularSourceFile::openNativeStream() {
-            return Ptr<std::istream>(new std::ifstream(_filePath));
-        }
-
         StreamSourceFile::StreamSourceFile(std::string streamName, Ptr<std::istream> stream)
             : _streamName(std::move(streamName)), _stream(std::move(stream)) {
+        }
+
+        Ptr<std::istream> RegularSourceFile::openNativeStream() {
+            return Ptr<std::istream>(new std::ifstream(_filePath));
         }
     }
 }

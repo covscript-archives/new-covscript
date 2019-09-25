@@ -5,7 +5,6 @@
 #include <covscript/compiler/sharedTypes.h>
 #include <cstring>
 #include <cstdlib>
-#include <cassert>
 #include <sstream>
 
 #pragma clang diagnostic push
