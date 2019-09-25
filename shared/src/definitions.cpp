@@ -2,9 +2,7 @@
 // Created by kiva on 2019/9/24.
 //
 
-#include <covscript/shared/any.hpp>
 #include <covscript/shared/utility.hpp>
-#include <covscript/shared/exception.hpp>
 
 namespace cs {
     namespace shared {
