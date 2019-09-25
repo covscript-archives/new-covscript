@@ -57,26 +57,26 @@ add_custom_command(OUTPUT ${compiler-GENERATED_SRC}
         )
 
 include_directories(
-        ${PROJECT_SOURCE_DIR}/compiler/runtime/src
-        ${PROJECT_SOURCE_DIR}/compiler/runtime/src/misc
-        ${PROJECT_SOURCE_DIR}/compiler/runtime/src/atn
-        ${PROJECT_SOURCE_DIR}/compiler/runtime/src/dfa
-        ${PROJECT_SOURCE_DIR}/compiler/runtime/src/tree
-        ${PROJECT_SOURCE_DIR}/compiler/runtime/src/support
+        ${PROJECT_SOURCE_DIR}/compiler/antlr/runtime/src
+        ${PROJECT_SOURCE_DIR}/compiler/antlr/runtime/src/misc
+        ${PROJECT_SOURCE_DIR}/compiler/antlr/runtime/src/atn
+        ${PROJECT_SOURCE_DIR}/compiler/antlr/runtime/src/dfa
+        ${PROJECT_SOURCE_DIR}/compiler/antlr/runtime/src/tree
+        ${PROJECT_SOURCE_DIR}/compiler/antlr/runtime/src/support
         ${PROJECT_SOURCE_DIR}/compiler/generated
         ${PROJECT_SOURCE_DIR}/compiler/include
         ${PROJECT_SOURCE_DIR}/runtime/include
         ${PROJECT_SOURCE_DIR}/shared/include
         )
 
-aux_source_directory(${PROJECT_SOURCE_DIR}/compiler/runtime/src antlr4_SRC_1)
-aux_source_directory(${PROJECT_SOURCE_DIR}/compiler/runtime/src/misc antlr4_SRC_2)
-aux_source_directory(${PROJECT_SOURCE_DIR}/compiler/runtime/src/atn antlr4_SRC_3)
-aux_source_directory(${PROJECT_SOURCE_DIR}/compiler/runtime/src/dfa antlr4_SRC_4)
-aux_source_directory(${PROJECT_SOURCE_DIR}/compiler/runtime/src/tree antlr4_SRC_5)
-aux_source_directory(${PROJECT_SOURCE_DIR}/compiler/runtime/src/support antlr4_SRC_6)
-aux_source_directory(${PROJECT_SOURCE_DIR}/compiler/runtime/src/tree/pattern antlr4_SRC_7)
-aux_source_directory(${PROJECT_SOURCE_DIR}/compiler/runtime/src/tree/xpath antlr4_SRC_8)
+aux_source_directory(${PROJECT_SOURCE_DIR}/compiler/antlr/runtime/src antlr4_SRC_1)
+aux_source_directory(${PROJECT_SOURCE_DIR}/compiler/antlr/runtime/src/misc antlr4_SRC_2)
+aux_source_directory(${PROJECT_SOURCE_DIR}/compiler/antlr/runtime/src/atn antlr4_SRC_3)
+aux_source_directory(${PROJECT_SOURCE_DIR}/compiler/antlr/runtime/src/dfa antlr4_SRC_4)
+aux_source_directory(${PROJECT_SOURCE_DIR}/compiler/antlr/runtime/src/tree antlr4_SRC_5)
+aux_source_directory(${PROJECT_SOURCE_DIR}/compiler/antlr/runtime/src/support antlr4_SRC_6)
+aux_source_directory(${PROJECT_SOURCE_DIR}/compiler/antlr/runtime/src/tree/pattern antlr4_SRC_7)
+aux_source_directory(${PROJECT_SOURCE_DIR}/compiler/antlr/runtime/src/tree/xpath antlr4_SRC_8)
 set(antlr4_SRC ${antlr4_SRC_1} ${antlr4_SRC_2} ${antlr4_SRC_3} ${antlr4_SRC_4} ${antlr4_SRC_5} ${antlr4_SRC_6} ${antlr4_SRC_7} ${antlr4_SRC_8})
 
 add_library(antlr4_runtime STATIC
