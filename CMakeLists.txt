@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.4)
+cmake_minimum_required(VERSION 3.9)
 project(covscript_4)
 
 include(CheckIncludeFiles)
@@ -201,4 +201,6 @@ add_compiler_benchmark_target(bytebuffer)
 add_compiler_test_target(typeflags)
 
 add_shared_benchmark_target(any)
+target_compile_features(shared-bench-any PRIVATE cxx_std_17)
+
 add_shared_test_target(any)
