@@ -16,12 +16,12 @@ else ()
 endif ()
 set(CMAKE_CXX_STANDARD 14)
 
-#### Check C99
-check_c_compiler_flag("-std=c99" COMPILER_SUPPORTS_C99)
-if (COMPILER_SUPPORTS_C99)
-    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -std=c99")
+#### Check C11
+check_c_compiler_flag("-std=c11" COMPILER_SUPPORTS_C11)
+if (COMPILER_SUPPORTS_C11)
+    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -std=c11")
 else ()
-    message(STATUS "The compiler ${CMAKE_C_COMPILER} has no C99 support. Please use a different C compiler.")
+    message(STATUS "The compiler ${CMAKE_C_COMPILER} has no C11 support. Please use a different C compiler.")
 endif ()
 set(CMAKE_C_STANDARD 11)
 
