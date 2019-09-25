@@ -28,7 +28,7 @@ namespace cs {
             }
         };
 
-        Parser::Parser(Ptr<SourceFile> file)
+        Parser::Parser(const Ptr<SourceFile>& file)
             : _sourceFile(file),
               _nativeStream(file->openNativeStream()),
               _antlrInputStream(*_nativeStream.get()),
@@ -47,16 +47,6 @@ namespace cs {
                 e.getLine(), e.getCharPosition());
 
             Ptr<std::istream> sourceStream = _sourceFile->openNativeStream();
-
-//            if (is<const RegularSourceFile *>(&_sourceFile)) {
-//                auto &file = static_cast<const RegularSourceFile &>(_sourceFile);
-//                sourceStream = new std::ifstream(file.getFilePath());
-//            } else if (is<const CodeSourceFile *>(&_sourceFile)) {
-//                auto &file = static_cast<const CodeSourceFile &>(_sourceFile);
-//                sourceStream = new std::istringstream(file.getCode());
-//            } else if (is<const StreamSourceFile *>(&_sourceFile)) {
-//
-//            }
 
             int currentLine = 1;
             std::string line;
@@ -97,6 +87,10 @@ namespace cs {
 
         Ptr<std::istream> RegularSourceFile::openNativeStream() {
             return Ptr<std::istream>(new std::ifstream(_filePath));
+        }
+
+        StreamSourceFile::StreamSourceFile(std::string streamName, Ptr<std::istream> stream)
+            : _streamName(std::move(streamName)), _stream(std::move(stream)) {
         }
     }
 }

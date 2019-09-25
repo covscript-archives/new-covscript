@@ -59,9 +59,18 @@ namespace cs {
         class StreamSourceFile : public SourceFile {
         private:
             std::string _streamName;
+            Ptr<std::istream> _stream;
 
         public:
-            // TODO: implement
+            StreamSourceFile(std::string streamName, Ptr<std::istream> stream);
+
+            Ptr<std::istream> openNativeStream() override {
+                return _stream;
+            }
+
+            const std::string &getSourceName() override {
+                return _streamName;
+            }
         };
 
         class SyntaxError : public std::exception {
@@ -106,7 +115,7 @@ namespace cs {
             antlr4::CommonTokenStream _antlrTokenStream;
 
         public:
-            explicit Parser(Ptr<SourceFile> file);
+            explicit Parser(const Ptr<SourceFile>& file);
 
             ~Parser() override;
 
