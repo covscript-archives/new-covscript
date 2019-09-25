@@ -38,8 +38,9 @@ namespace cs {
             this->constructASTs();
             for (auto &phase : _compilerPhases) {
                 for (auto &elem : _privateData.getCompileFiles()) {
+                    auto unit = elem.second->compilationUnit();
                     preparePhase(phase);
-                    runPhase(phase, elem.second->compilationUnit());
+                    runPhase(phase, unit);
                     postPhase(phase);
                 }
             }
