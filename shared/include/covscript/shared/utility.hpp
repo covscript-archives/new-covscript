@@ -133,7 +133,7 @@ namespace cs {
 
 #ifndef COVSDK_LOGCR_ONLY
 // Event Log
-#define COVSDK_LOGEV(msg) ::printf("EV[%s] In file %s, line %d: %s\n", __TIME__, __FILE__, __LINE__, msg);
+#define COVSDK_LOGEV(msg) ::printf("EV[%s] In file %s:%d: %s\n", __TIME__, __FILE__, __LINE__, msg);
 
 #else
 
@@ -141,7 +141,7 @@ namespace cs {
 
 #endif
 // Critical Event Log
-#define COVSDK_LOGCR(msg) ::printf("CR[%s] In file %s, line %d: %s\n", __TIME__, __FILE__, __LINE__, msg);
+#define COVSDK_LOGCR(msg) ::printf("CR[%s] In file %s:%d: %s\n", __TIME__, __FILE__, __LINE__, msg);
 
 #else
 
