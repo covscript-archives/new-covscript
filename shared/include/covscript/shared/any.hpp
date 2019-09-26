@@ -16,8 +16,8 @@ public:
 	// 缓冲池大小，过大的值可能会适而其反
 	static constexpr std::size_t default_allocate_buffer_size = 16;
 	/*
-	* 分配器提供者，默认使用STL分配器，可根据需要替换为内存池
-	* 提示：本框架的Any使用了Small Data Optimize技术，可大幅减少堆的负担
+	* 分配器提供者，默认使用 STL 分配器，可根据需要替换为内存池
+	* 提示：本框架的 Any 使用了 Small Data Optimize 技术，可大幅减少堆的负担
 	* 更换内存池可能并不会提升太多性能
 	*/
 	template <typename T>
@@ -34,11 +34,11 @@ private:
 	*/
 	class stor_base {
 	public:
-		// 默认构造函数，直接使用default版本
+		// 默认构造函数，直接使用 default 版本
 		stor_base() = default;
-		// 复制构造函数，直接使用default版本
+		// 复制构造函数，直接使用 default 版本
 		stor_base(const stor_base &) = default;
-		// 析构函数，声明为虚函数并使用default实现
+		// 析构函数，声明为虚函数并使用 default 实现
 		virtual ~stor_base() = default;
 		// RTTI类型函数，返回类型信息
 		virtual std::type_index type() const noexcept = 0;
@@ -63,15 +63,15 @@ private:
 		T data;
 		// 分配器
 		static default_allocator<stor_impl<T>> allocator;
-		// 默认构造函数，使用default实现
+		// 默认构造函数，使用 default 实现
 		stor_impl() = default;
-		// 析构函数，使用default实现
+		// 析构函数，使用 default 实现
 		virtual ~stor_impl() = default;
 		// 禁用复制构造函数
 		stor_impl(const stor_impl &) = delete;
 		// 自定义构造函数，构造存储的数据
 		stor_impl(const T &dat) : data(dat) {}
-		// 以下五个函数为实现基类的virtual函数
+		// 以下五个函数为实现基类的 virtual 函数
 		std::type_index type() const noexcept override
 		{
 			return typeid(T);
@@ -111,7 +111,7 @@ private:
 
 	// 使用联合实现
 	struct stor_union {
-		// 触发小对象优化的阈值，需大于std::alignment_of<stor_base *>::value
+		// 触发小对象优化的阈值，需大于 std::alignment_of<stor_base *>::value
 		static constexpr unsigned int static_stor_size = 3 * std::alignment_of<stor_base *>::value;
 		union {
 			// 使用无符号字符数组提供存储数据的原始内存空间
@@ -127,12 +127,12 @@ private:
 
 	// 内部方法封装
 
-	// 获取stor_base指针方法的封装
+	// 获取 stor_base 指针方法的封装
 	inline stor_base *get_handler()
 	{
 		switch (m_data.status) {
 		case stor_status::null:
-			throw_ex<runtime_error>("Access null any object.");
+			throw_ex<cs::runtime_error>("Access null any object.");
 		case stor_status::data:
 			return reinterpret_cast<stor_base *>(m_data.impl.data);
 		case stor_status::ptr:
@@ -145,7 +145,7 @@ private:
 	{
 		switch (m_data.status) {
 		case stor_status::null:
-			throw_ex<runtime_error>("Access null any object.");
+			throw_ex<cs::runtime_error>("Access null any object.");
 		case stor_status::data:
 			return reinterpret_cast<const stor_base *>(m_data.impl.data);
 		case stor_status::ptr:
@@ -212,7 +212,7 @@ public:
 	// 默认构造函数
 	any() {}
 
-	// 自定义构造函数，未标记为explicit以允许隐式转换
+	// 自定义构造函数，未标记为 explicit 以允许隐式转换
 	template <typename T>
 	any(const T &val)
 	{
