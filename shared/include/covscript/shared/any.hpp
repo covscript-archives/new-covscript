@@ -4,12 +4,12 @@
 
 namespace cs {
 	class type_support;
-	namespace runtime {
+	namespace shared {
 		class any;
 	}
 } // namespace cs
 
-class alignas(alignof(std::size_t)) cs::runtime::any final {
+class alignas(alignof(std::size_t)) cs::shared::any final {
 public:
 	using typeid_t = std::type_index;
 	using byte_t = unsigned char;
@@ -303,5 +303,5 @@ public:
 	}
 };
 
-template <typename T>
-cs::runtime::any::default_allocator<cs::runtime::any::stor_impl<T>> cs::runtime::any::stor_impl<T>::allocator;
+template<typename T>
+cs::shared::any::default_allocator<cs::shared::any::stor_impl<T>> cs::shared::any::stor_impl<T>::allocator;

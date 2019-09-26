@@ -3,7 +3,7 @@
 //
 
 #include <covscript/compiler/bytebuffer.h>
-#include "BenchmarkHelper.h"
+#include "../../shared/benchmarks/BenchmarkHelper.h"
 
 using namespace cs::compiler;
 
