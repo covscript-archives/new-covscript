@@ -14,6 +14,12 @@ namespace cs {
             BO_LITTLE_ENDIAN, BO_BIG_ENDIAN
         };
 
+        struct SizedBuffer {
+            size_t _size;
+            size_t _used;
+            uint8_t *_bytes;
+        };
+
         class ByteBuffer {
         public:
             using byte = uint8_t;
@@ -40,6 +46,14 @@ namespace cs {
             explicit ByteBuffer(size_t initialLength);
 
             ~ByteBuffer();
+
+            SizedBuffer getBuffer() {
+                return {
+                    ._size = getLength(),
+                    ._used = getPosition(),
+                    ._bytes = _buffer,
+                };
+            }
 
             void setOrder(ByteOrder order) {
                 this->_byteOrder = order;

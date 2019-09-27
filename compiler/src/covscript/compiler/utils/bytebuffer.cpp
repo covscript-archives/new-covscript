@@ -1,7 +1,7 @@
 //
 // Created by kiva on 2019/8/25.
 //
-#include <covscript/compiler/bytebuffer.h>
+#include <covscript/compiler/utils/bytebuffer.h>
 #include <covscript/compiler/sharedTypes.h>
 #include <cstring>
 #include <cstdlib>

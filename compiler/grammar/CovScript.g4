@@ -1,7 +1,7 @@
 grammar CovScript;
 
 @lexer::header {
-#include <covscript/compiler/unicode.h>
+#include <covscript/compiler/utils/unicode.h>
 }
 
 // Parser

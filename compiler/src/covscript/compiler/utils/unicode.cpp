@@ -4,7 +4,7 @@
 #pragma clang diagnostic push
 #pragma ide diagnostic ignored "hicpp-signed-bitwise"
 
-#include <covscript/compiler/unicode.h>
+#include <covscript/compiler/utils/unicode.h>
 
 namespace cs {
     namespace compiler {

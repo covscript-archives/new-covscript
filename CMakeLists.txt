@@ -87,10 +87,10 @@ set(compiler_SRC
         ${compiler-GENERATED_SRC}
         compiler/include/covscript/compiler/parser.h
         compiler/src/covscript/compiler/parser.cpp
-        compiler/include/covscript/compiler/unicode.h
-        compiler/src/covscript/compiler/unicode.cpp 
-        compiler/include/covscript/compiler/bytebuffer.h
-        compiler/src/covscript/compiler/bytebuffer.cpp
+        compiler/include/covscript/compiler/utils/unicode.h
+        compiler/src/covscript/compiler/utils/unicode.cpp
+        compiler/include/covscript/compiler/utils/bytebuffer.h
+        compiler/src/covscript/compiler/utils/bytebuffer.cpp
         compiler/include/covscript/compiler/scope.h
         compiler/include/covscript/compiler/variable.h
         compiler/src/covscript/compiler/scope.cpp
@@ -102,7 +102,7 @@ set(compiler_SRC
         compiler/src/covscript/compiler/phase/assembleScan.cpp
         compiler/include/covscript/compiler/phase/assembleDefine.h
         compiler/src/covscript/compiler/phase/assembleDefine.cpp
-        compiler/src/covscript/compiler/variable.cpp)
+        compiler/src/covscript/compiler/variable.cpp compiler/include/covscript/compiler/asm/CodeWriter.h)
 
 set(runtime_SRC
         runtime/include/covscript/runtime/vm_instance.hpp
