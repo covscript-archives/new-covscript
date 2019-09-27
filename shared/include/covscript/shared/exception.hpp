@@ -47,3 +47,5 @@ namespace cs {
 #endif
 	}
 } // namespace cs
+
+#define COVSDK_RTERR(msg) COVSDK_LOGCR(msg) cs::throw_ex<cs::runtime_error>(msg);
