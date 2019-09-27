@@ -4,7 +4,7 @@
 #pragma once
 
 #include <antlr4-runtime.h>
-#include <covscript/compiler/sharedTypes.h>
+#include <covscript/compiler/sharedTypes.hpp>
 #include <CovScriptParser.h>
 #include <CovScriptLexer.h>
 

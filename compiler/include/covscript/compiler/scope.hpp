@@ -3,8 +3,8 @@
 //
 #pragma once
 
-#include <covscript/compiler/variable.h>
-#include <covscript/compiler/callState.h>
+#include <covscript/compiler/variable.hpp>
+#include <covscript/compiler/callState.hpp>
 #include <unordered_map>
 #include <utility>
 

@@ -3,7 +3,7 @@
 //
 #pragma once
 
-#include <covscript/compiler/sharedTypes.h>
+#include <covscript/compiler/sharedTypes.hpp>
 #include <unordered_map>
 
 namespace cs {

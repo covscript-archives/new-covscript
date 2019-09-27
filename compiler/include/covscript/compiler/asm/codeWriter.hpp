@@ -3,7 +3,7 @@
 //
 #pragma once
 
-#include <covscript/compiler/utils/bytebuffer.h>
+#include <covscript/compiler/utils/bytebuffer.hpp>
 
 namespace cs {
     namespace compiler {

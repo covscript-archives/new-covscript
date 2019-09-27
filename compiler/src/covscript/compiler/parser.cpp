@@ -1,8 +1,8 @@
 //
 // Created by kiva on 2019-08-13.
 //
-#include <covscript/compiler/parser.h>
-#include <covscript/compiler/sharedTypes.h>
+#include <covscript/compiler/parser.hpp>
+#include <covscript/compiler/sharedTypes.hpp>
 #include <utility>
 #include <sstream>
 

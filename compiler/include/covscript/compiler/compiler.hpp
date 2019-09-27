@@ -9,8 +9,8 @@
 #define PHASE_LOG(msg)
 #endif
 
-#include <covscript/compiler/scope.h>
-#include <covscript/compiler/parser.h>
+#include <covscript/compiler/scope.hpp>
+#include <covscript/compiler/parser.hpp>
 #include <covscript/shared/utility.hpp>
 #include <unordered_map>
 #include <list>

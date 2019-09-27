@@ -1,7 +1,7 @@
 //
 // Created by kiva on 2019/9/20.
 //
-#include <covscript/compiler/compiler.h>
+#include <covscript/compiler/compiler.hpp>
 
 namespace cs {
     namespace compiler {

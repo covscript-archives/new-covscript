@@ -5,7 +5,7 @@
 #define COVSCRIPT_SDK_DEBUG
 #define CS_COMPILER_PHASE_IMPL
 
-#include <covscript/compiler/phase/assembleScan.h>
+#include <covscript/compiler/phase/assembleScan.hpp>
 
 namespace cs {
     namespace compiler {

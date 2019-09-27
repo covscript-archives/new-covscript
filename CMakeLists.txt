@@ -85,24 +85,25 @@ add_library(antlr4_runtime STATIC
 #### CovScript SDK library target
 set(compiler_SRC
         ${compiler-GENERATED_SRC}
-        compiler/include/covscript/compiler/parser.h
+        compiler/include/covscript/compiler/parser.hpp
         compiler/src/covscript/compiler/parser.cpp
-        compiler/include/covscript/compiler/utils/unicode.h
+        compiler/include/covscript/compiler/utils/unicode.hpp
         compiler/src/covscript/compiler/utils/unicode.cpp
-        compiler/include/covscript/compiler/utils/bytebuffer.h
+        compiler/include/covscript/compiler/utils/bytebuffer.hpp
         compiler/src/covscript/compiler/utils/bytebuffer.cpp
-        compiler/include/covscript/compiler/scope.h
-        compiler/include/covscript/compiler/variable.h
+        compiler/include/covscript/compiler/scope.hpp
+        compiler/include/covscript/compiler/variable.hpp
         compiler/src/covscript/compiler/scope.cpp
-        compiler/include/covscript/compiler/callState.h
-        compiler/include/covscript/compiler/compiler.h
-        compiler/include/covscript/compiler/sharedTypes.h
+        compiler/include/covscript/compiler/callState.hpp
+        compiler/include/covscript/compiler/compiler.hpp
+        compiler/include/covscript/compiler/sharedTypes.hpp
         compiler/src/covscript/compiler/compiler.cpp
-        compiler/include/covscript/compiler/phase/assembleScan.h
+        compiler/include/covscript/compiler/phase/assembleScan.hpp
         compiler/src/covscript/compiler/phase/assembleScan.cpp
-        compiler/include/covscript/compiler/phase/assembleDefine.h
+        compiler/include/covscript/compiler/phase/assembleDefine.hpp
         compiler/src/covscript/compiler/phase/assembleDefine.cpp
-        compiler/src/covscript/compiler/variable.cpp compiler/include/covscript/compiler/asm/CodeWriter.h)
+        compiler/src/covscript/compiler/variable.cpp
+        compiler/include/covscript/compiler/asm/codeWriter.hpp)
 
 set(runtime_SRC
         runtime/include/covscript/runtime/vm_instance.hpp

@@ -3,7 +3,7 @@
 //
 #pragma once
 
-#include <covscript/compiler/compiler.h>
+#include <covscript/compiler/compiler.hpp>
 
 namespace cs {
     namespace compiler {

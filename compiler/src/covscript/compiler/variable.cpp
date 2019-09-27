@@ -2,7 +2,7 @@
 // Created by kiva on 2019/9/24.
 //
 
-#include <covscript/compiler/variable.h>
+#include <covscript/compiler/variable.hpp>
 
 namespace cs {
     namespace compiler {

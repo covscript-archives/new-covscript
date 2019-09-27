@@ -3,8 +3,8 @@
 //
 #pragma once
 
-#include <covscript/compiler/sharedTypes.h>
-#include <covscript/compiler/parser.h>
+#include <covscript/compiler/sharedTypes.hpp>
+#include <covscript/compiler/parser.hpp>
 
 namespace cs {
     namespace compiler {

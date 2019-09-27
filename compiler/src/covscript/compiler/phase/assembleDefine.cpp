@@ -5,7 +5,7 @@
 #define COVSCRIPT_SDK_DEBUG
 #define CS_COMPILER_PHASE_IMPL
 
-#include <covscript/compiler/phase/assembleDefine.h>
+#include <covscript/compiler/phase/assembleDefine.hpp>
 
 namespace cs {
     namespace compiler {
