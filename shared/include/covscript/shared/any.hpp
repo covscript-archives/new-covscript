@@ -4,7 +4,7 @@
 
 namespace cs {
 	class type_support;
-	namespace runtime {
+	namespace shared {
 		class any;
 	}
 } // namespace cs
@@ -291,5 +291,5 @@ public:
 	}
 };
 
-template <typename T>
-cs::runtime::any::default_allocator<cs::runtime::any::stor_impl<T>> cs::runtime::any::stor_impl<T>::allocator;
+template<typename T>
+cs::shared::any::default_allocator<cs::shared::any::stor_impl<T>> cs::shared::any::stor_impl<T>::allocator;

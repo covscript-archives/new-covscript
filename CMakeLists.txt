@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.4)
+cmake_minimum_required(VERSION 3.9)
 project(covscript_4)
 
 include(CheckIncludeFiles)
@@ -16,12 +16,12 @@ else ()
 endif ()
 set(CMAKE_CXX_STANDARD 14)
 
-#### Check C99
-check_c_compiler_flag("-std=c99" COMPILER_SUPPORTS_C99)
-if (COMPILER_SUPPORTS_C99)
-    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -std=c99")
+#### Check C11
+check_c_compiler_flag("-std=c11" COMPILER_SUPPORTS_C11)
+if (COMPILER_SUPPORTS_C11)
+    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -std=c11")
 else ()
-    message(STATUS "The compiler ${CMAKE_C_COMPILER} has no C99 support. Please use a different C compiler.")
+    message(STATUS "The compiler ${CMAKE_C_COMPILER} has no C11 support. Please use a different C compiler.")
 endif ()
 set(CMAKE_C_STANDARD 11)
 
@@ -57,26 +57,26 @@ add_custom_command(OUTPUT ${compiler-GENERATED_SRC}
         )
 
 include_directories(
-        ${PROJECT_SOURCE_DIR}/compiler/runtime/src
-        ${PROJECT_SOURCE_DIR}/compiler/runtime/src/misc
-        ${PROJECT_SOURCE_DIR}/compiler/runtime/src/atn
-        ${PROJECT_SOURCE_DIR}/compiler/runtime/src/dfa
-        ${PROJECT_SOURCE_DIR}/compiler/runtime/src/tree
-        ${PROJECT_SOURCE_DIR}/compiler/runtime/src/support
+        ${PROJECT_SOURCE_DIR}/compiler/antlr/runtime/src
+        ${PROJECT_SOURCE_DIR}/compiler/antlr/runtime/src/misc
+        ${PROJECT_SOURCE_DIR}/compiler/antlr/runtime/src/atn
+        ${PROJECT_SOURCE_DIR}/compiler/antlr/runtime/src/dfa
+        ${PROJECT_SOURCE_DIR}/compiler/antlr/runtime/src/tree
+        ${PROJECT_SOURCE_DIR}/compiler/antlr/runtime/src/support
         ${PROJECT_SOURCE_DIR}/compiler/generated
         ${PROJECT_SOURCE_DIR}/compiler/include
         ${PROJECT_SOURCE_DIR}/runtime/include
         ${PROJECT_SOURCE_DIR}/shared/include
         )
 
-aux_source_directory(${PROJECT_SOURCE_DIR}/compiler/runtime/src antlr4_SRC_1)
-aux_source_directory(${PROJECT_SOURCE_DIR}/compiler/runtime/src/misc antlr4_SRC_2)
-aux_source_directory(${PROJECT_SOURCE_DIR}/compiler/runtime/src/atn antlr4_SRC_3)
-aux_source_directory(${PROJECT_SOURCE_DIR}/compiler/runtime/src/dfa antlr4_SRC_4)
-aux_source_directory(${PROJECT_SOURCE_DIR}/compiler/runtime/src/tree antlr4_SRC_5)
-aux_source_directory(${PROJECT_SOURCE_DIR}/compiler/runtime/src/support antlr4_SRC_6)
-aux_source_directory(${PROJECT_SOURCE_DIR}/compiler/runtime/src/tree/pattern antlr4_SRC_7)
-aux_source_directory(${PROJECT_SOURCE_DIR}/compiler/runtime/src/tree/xpath antlr4_SRC_8)
+aux_source_directory(${PROJECT_SOURCE_DIR}/compiler/antlr/runtime/src antlr4_SRC_1)
+aux_source_directory(${PROJECT_SOURCE_DIR}/compiler/antlr/runtime/src/misc antlr4_SRC_2)
+aux_source_directory(${PROJECT_SOURCE_DIR}/compiler/antlr/runtime/src/atn antlr4_SRC_3)
+aux_source_directory(${PROJECT_SOURCE_DIR}/compiler/antlr/runtime/src/dfa antlr4_SRC_4)
+aux_source_directory(${PROJECT_SOURCE_DIR}/compiler/antlr/runtime/src/tree antlr4_SRC_5)
+aux_source_directory(${PROJECT_SOURCE_DIR}/compiler/antlr/runtime/src/support antlr4_SRC_6)
+aux_source_directory(${PROJECT_SOURCE_DIR}/compiler/antlr/runtime/src/tree/pattern antlr4_SRC_7)
+aux_source_directory(${PROJECT_SOURCE_DIR}/compiler/antlr/runtime/src/tree/xpath antlr4_SRC_8)
 set(antlr4_SRC ${antlr4_SRC_1} ${antlr4_SRC_2} ${antlr4_SRC_3} ${antlr4_SRC_4} ${antlr4_SRC_5} ${antlr4_SRC_6} ${antlr4_SRC_7} ${antlr4_SRC_8})
 
 add_library(antlr4_runtime STATIC
@@ -93,9 +93,16 @@ set(compiler_SRC
         compiler/src/covscript/compiler/bytebuffer.cpp
         compiler/include/covscript/compiler/scope.h
         compiler/include/covscript/compiler/variable.h
-        compiler/include/covscript/compiler/function.h
-        compiler/include/covscript/compiler/types.h
-        )
+        compiler/src/covscript/compiler/scope.cpp
+        compiler/include/covscript/compiler/callState.h
+        compiler/include/covscript/compiler/compiler.h
+        compiler/include/covscript/compiler/sharedTypes.h
+        compiler/src/covscript/compiler/compiler.cpp
+        compiler/include/covscript/compiler/phase/assembleScan.h
+        compiler/src/covscript/compiler/phase/assembleScan.cpp
+        compiler/include/covscript/compiler/phase/assembleDefine.h
+        compiler/src/covscript/compiler/phase/assembleDefine.cpp
+        compiler/src/covscript/compiler/variable.cpp)
 
 set(runtime_SRC
         runtime/include/covscript/runtime/vm_instance.hpp
@@ -107,7 +114,7 @@ set(shared_SRC
         shared/include/covscript/shared/memory.hpp
         shared/include/covscript/shared/utility.hpp
         shared/include/covscript/shared/shared_types.hpp
-        )
+        shared/src/definitions.cpp)
 
 set(covscript_SRC
         ${compiler_SRC}
@@ -144,20 +151,56 @@ add_executable(compiler
 
 target_link_libraries(compiler covscript4)
 
-#### Benchmarks and Tests
-macro(add_benchmark_target name)
-    add_executable(bench-${name}
+#### Compiler Benchmarks and Tests
+macro(add_compiler_benchmark_target name)
+    add_executable(compiler-bench-${name}
             compiler/benchmarks/bench-${name}.cpp
-            compiler/benchmarks/BenchmarkHelper.h)
-    target_link_libraries(bench-${name} covscript4)
-    add_test(${name} bench-${name})
+            shared/benchmarks/BenchmarkHelper.h)
+    target_link_libraries(compiler-bench-${name} covscript4)
+    add_test(${name} compiler-bench-${name})
 endmacro()
 
-macro(add_test_target name)
-    add_executable(test-${name} compiler/tests/test-${name}.cpp)
-    target_link_libraries(test-${name} covscript4)
-    add_test(${name} test-${name})
+macro(add_compiler_test_target name)
+    add_executable(compiler-test-${name} compiler/tests/test-${name}.cpp)
+    target_link_libraries(compiler-test-${name} covscript4)
+    add_test(${name} compiler-test-${name})
 endmacro()
 
-add_benchmark_target(copy)
-add_benchmark_target(bytebuffer)
+#### Runtime Benchmarks and Tests
+macro(add_runtime_benchmark_target name)
+    add_executable(runtime-bench-${name}
+            runtime/benchmarks/bench-${name}.cpp
+            shared/benchmarks/BenchmarkHelper.h)
+    target_link_libraries(runtime-bench-${name} covscript4)
+    add_test(${name} runtime-bench-${name})
+endmacro()
+
+macro(add_runtime_test_target name)
+    add_executable(runtime-test-${name} runtime/tests/test-${name}.cpp)
+    target_link_libraries(runtime-test-${name} covscript4)
+    add_test(${name} runtime-test-${name})
+endmacro()
+
+#### Shared Benchmarks and Tests
+macro(add_shared_benchmark_target name)
+    add_executable(shared-bench-${name}
+            shared/benchmarks/bench-${name}.cpp
+            shared/benchmarks/BenchmarkHelper.h)
+    target_link_libraries(shared-bench-${name} covscript4)
+    add_test(${name} shared-bench-${name})
+endmacro()
+
+macro(add_shared_test_target name)
+    add_executable(shared-test-${name} shared/tests/test-${name}.cpp)
+    target_link_libraries(shared-test-${name} covscript4)
+    add_test(${name} shared-test-${name})
+endmacro()
+
+add_compiler_benchmark_target(copy)
+add_compiler_benchmark_target(bytebuffer)
+add_compiler_test_target(typeflags)
+
+add_shared_benchmark_target(any)
+target_compile_features(shared-bench-any PRIVATE cxx_std_17)
+
+add_shared_test_target(any)

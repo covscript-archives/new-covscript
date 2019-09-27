@@ -1,9 +1,10 @@
 #pragma once
 
 #include <covscript/shared/memory.hpp>
+#include <covscript/shared/any.hpp>
 
 namespace cs {
     class vm_instance final {
-        runtime::stack_type<runtime::stack_type<runtime::any>> m_stack;
+        shared::stack_type<shared::stack_type<shared::any>> m_stack;
     };
 }

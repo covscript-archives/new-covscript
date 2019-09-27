@@ -4,7 +4,7 @@
 #include <cstddef>
 
 namespace cs {
-	namespace runtime {
+	namespace shared {
 		template <typename T>
 		class stack_type final {
 			using aligned_type = typename std::aligned_storage<sizeof(T), std::alignment_of<T>::value>::type;

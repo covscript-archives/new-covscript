@@ -5,7 +5,7 @@
 
 #pragma once
 
-#include "support/Any.h"
+#include "support/definitions.h"
 
 namespace antlr4 {
 namespace tree {
