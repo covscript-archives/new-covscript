@@ -276,7 +276,7 @@ public:
 	{
 		stor_base *ptr = get_handler();
 		if (ptr->type() != typeid(T))
-			throw_ex<runtime_error>("Access wrong type of any.");
+			throw_ex<cs::runtime_error>("Access wrong type of any.");
 		return static_cast<stor_impl<T> *>(ptr)->data;
 	}
 
@@ -286,7 +286,7 @@ public:
 	{
 		const stor_base *ptr = get_handler();
 		if (ptr->type() != typeid(T))
-			throw_ex<runtime_error>("Access wrong type of any.");
+			throw_ex<cs::runtime_error>("Access wrong type of any.");
 		return static_cast<const stor_impl<T> *>(ptr)->data;
 	}
 };
