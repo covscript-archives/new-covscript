@@ -4,7 +4,7 @@
 #include <cstddef>
 
 namespace cs {
-	namespace runtime {
+	namespace shared {
 		template <typename T>
 		class stack_type final {
 			using aligned_type = typename std::aligned_storage<sizeof(T), std::alignment_of<T>::value>::type;
@@ -94,21 +94,21 @@ namespace cs {
 			inline T &top() const
 			{
 				if (empty())
-					throw_ex<runtime_error>("Stack is empty.");
+					throw_ex<cs::runtime_error>("Stack is empty.");
 				return *(m_current - 1);
 			}
 
 			inline T &bottom() const
 			{
 				if (empty())
-					throw_ex<runtime_error>("Stack is empty.");
+					throw_ex<cs::runtime_error>("Stack is empty.");
 				return *m_start;
 			}
 
 			inline T &at(std::size_t offset) const
 			{
 				if (offset >= size())
-					throw_ex<runtime_error>("Stack out of range.");
+					throw_ex<cs::runtime_error>("Stack out of range.");
 				return *(m_current - offset - 1);
 			}
 
@@ -121,14 +121,14 @@ namespace cs {
 			inline void push(ArgsT &&... args)
 			{
 				if (full())
-					throw_ex<runtime_error>("Stack overflow.");
+					throw_ex<cs::runtime_error>("Stack overflow.");
 				::new (m_current++) T(std::forward<ArgsT>(args)...);
 			}
 
 			inline T pop()
 			{
 				if (empty())
-					throw_ex<runtime_error>("Stack is empty.");
+					throw_ex<cs::runtime_error>("Stack is empty.");
 				T data(std::move(*m_current));
 				(m_current - 1)->~T();
 				--m_current;
@@ -138,7 +138,7 @@ namespace cs {
 			inline void pop_no_return()
 			{
 				if (empty())
-					throw runtime_error("Stack is empty.");
+					throw cs::runtime_error("Stack is empty.");
 				(m_current - 1)->~T();
 				--m_current;
 			}

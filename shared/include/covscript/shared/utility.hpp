@@ -6,7 +6,7 @@
 #include <thread>
 
 namespace cs {
-	namespace utility {
+	namespace shared {
 		class event_type final {
 		public:
 			using listener_type = std::function<bool(void *)>;
@@ -113,10 +113,7 @@ namespace cs {
 				return end - begin;
 			}
 		};
-
-		std::chrono::time_point<std::chrono::high_resolution_clock>
-		timer::m_timer(std::chrono::high_resolution_clock::now());
-	} // namespace utility
+	} // namespace shared
 } // namespace cs
 
 /*
@@ -136,7 +133,7 @@ namespace cs {
 
 #ifndef COVSDK_LOGCR_ONLY
 // Event Log
-#define COVSDK_LOGEV(msg) ::printf("EV[%s] In file %s, line %d: %s\n", __TIME__, __FILE__, __LINE__, msg);
+#define COVSDK_LOGEV(msg) ::printf("EV[%s] In file %s:%d: %s\n", __TIME__, __FILE__, __LINE__, msg);
 
 #else
 
@@ -144,7 +141,7 @@ namespace cs {
 
 #endif
 // Critical Event Log
-#define COVSDK_LOGCR(msg) ::printf("CR[%s] In file %s, line %d: %s\n", __TIME__, __FILE__, __LINE__, msg);
+#define COVSDK_LOGCR(msg) ::printf("CR[%s] In file %s:%d: %s\n", __TIME__, __FILE__, __LINE__, msg);
 
 #else
 

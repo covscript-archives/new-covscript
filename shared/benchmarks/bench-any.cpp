@@ -18,7 +18,7 @@ struct test_large_data {
 int main()
 {
 	std::cout << "Size of std::any: " << sizeof(std::any) << std::endl;
-	std::cout << "Size of cov::any: " << sizeof(cs::runtime::any) << std::endl;
+	std::cout << "Size of cov::any: " << sizeof(cs::shared::any) << std::endl;
 
 	std::cout << "[Small Data] std::any copying: " << cs::utility::timer::measure([]() {
 		std::any a(10);
@@ -54,7 +54,7 @@ int main()
 	std::cout << "[Large Data] cov::any copying: " << cs::utility::timer::measure([]() {
 		cs::runtime::any a(test_large_data("Hello"));
 		for (int i = 0; i < test_epoch; ++i)
-			cs::runtime::any b(a);
+			cs::shared::any b(a);
 	}) << std::endl;
 
 	std::cout << "[Large Data] std::any instancing: " << cs::utility::timer::measure([]() {

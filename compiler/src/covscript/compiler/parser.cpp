@@ -2,6 +2,7 @@
 // Created by kiva on 2019-08-13.
 //
 #include <covscript/compiler/parser.h>
+#include <covscript/compiler/sharedTypes.h>
 #include <utility>
 #include <sstream>
 
@@ -21,48 +22,31 @@ namespace cs {
             }
 
             void reportFailedPredicate(antlr4::Parser *recognizer, const antlr4::FailedPredicateException &e) override {
-                const std::string& ruleName = recognizer->getRuleNames()[recognizer->getContext()->getRuleIndex()];
+                const std::string &ruleName = recognizer->getRuleNames()[recognizer->getContext()->getRuleIndex()];
                 std::string msg = "rule " + ruleName + " " + e.what();
                 recognizer->notifyErrorListeners(e.getOffendingToken(), msg, std::make_exception_ptr(e));
             }
         };
 
-        Parser::Parser(SourceFile file)
-            : sourceFile(std::move(file)),
-              stream(new std::ifstream(file.getSource())),
-              antlrInputStream(*stream),
-              lexer(&antlrInputStream),
-              antlrTokenStream(&lexer),
-              CovScriptParser(&antlrTokenStream) {
+        Parser::Parser(const Ptr<SourceFile>& file)
+            : _sourceFile(file),
+              _nativeStream(file->openNativeStream()),
+              _antlrInputStream(*_nativeStream.get()),
+              _lexer(&_antlrInputStream),
+              _antlrTokenStream(&_lexer),
+              CovScriptParser(&_antlrTokenStream) {
             setErrorHandler(std::make_shared<MyErrorStrategy>());
+            _antlrInputStream.name = file->getSourceName();
         }
 
-        Parser::Parser(const std::string &code)
-            : sourceFile(code, false),
-              stream(nullptr),
-              antlrInputStream(code),
-              lexer(&antlrInputStream),
-              antlrTokenStream(&lexer),
-              CovScriptParser(&antlrTokenStream) {
-            setErrorHandler(std::make_shared<MyErrorStrategy>());
-        }
-
-        Parser::~Parser() {
-            delete stream;
-        }
+        Parser::~Parser() = default;
 
         void Parser::printSyntaxError(SyntaxError &e) {
-            const auto &source = sourceFile.isFile() ? sourceFile.getSource() : "<unknown>";
-
             printf("Syntax error at file: %s:%zd:%zd\n",
-                source.c_str(), e.getLine(), e.getCharPosition());
+                _sourceFile->getSourceName().c_str(),
+                e.getLine(), e.getCharPosition());
 
-            std::istream *sourceStream = nullptr;
-            if (getSourceFile().isFile()) {
-                sourceStream = new std::ifstream(source);
-            } else {
-                sourceStream = new std::istringstream(source);
-            }
+            Ptr<std::istream> sourceStream = _sourceFile->openNativeStream();
 
             int currentLine = 1;
             std::string line;
@@ -73,11 +57,9 @@ namespace cs {
                 ++currentLine;
             }
 
-            delete sourceStream;
-
             printf("    %s\n", line.c_str());
             printf("    ");
-            for (int i = 0; i < e.getCharPosition(); ++i) {
+            for (size_t i = 0; i < e.getCharPosition(); ++i) {
                 putchar(' ');
             }
             putchar('^');
@@ -87,12 +69,28 @@ namespace cs {
 
         SyntaxError::SyntaxError(antlr4::RuleContext *ruleContext, antlr4::Token *offendingToken,
                                  size_t line, size_t charPosition, std::string message)
-            : ruleContext(ruleContext), offendingSymbol(offendingToken), line(line),
-              charPosition(charPosition), message(std::move(message)) {
+            : _ruleContext(ruleContext), _offendingSymbol(offendingToken), _line(line),
+              _charPosition(charPosition), _message(std::move(message)) {
         }
 
-        SourceFile::SourceFile(std::string sourceName, bool isFileSource)
-            : source(std::move(sourceName)), isFileSource(isFileSource) {
+        CodeSourceFile::CodeSourceFile(std::string name, std::string code)
+            : _name(std::move(name)), _code(std::move(code)) {
+        }
+
+        Ptr<std::istream> CodeSourceFile::openNativeStream() {
+            return Ptr<std::istream>(new std::istringstream(_code));
+        }
+
+        RegularSourceFile::RegularSourceFile(std::string filePath)
+            : _filePath(std::move(filePath)) {
+        }
+
+        StreamSourceFile::StreamSourceFile(std::string streamName, Ptr<std::istream> stream)
+            : _streamName(std::move(streamName)), _stream(std::move(stream)) {
+        }
+
+        Ptr<std::istream> RegularSourceFile::openNativeStream() {
+            return Ptr<std::istream>(new std::ifstream(_filePath));
         }
     }
 }
