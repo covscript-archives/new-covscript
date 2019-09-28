@@ -16,6 +16,10 @@ namespace cs {
             std::unordered_map<VMString, Variable *> _variables;
 
         public:
+            explicit Scope(Scope *parent);
+
+            ~Scope() = default;
+
             Variable *search(const VMString &name);
 
             Scope *getParent() { return _parent; };

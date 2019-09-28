@@ -7,6 +7,8 @@
 #include <covscript/compiler/sharedTypes.hpp>
 #include <CovScriptParser.h>
 #include <CovScriptLexer.h>
+#include <CovScriptBaseListener.h>
+#include <CovScriptBaseVisitor.h>
 
 namespace cs {
     namespace compiler {

@@ -103,7 +103,9 @@ set(compiler_SRC
         compiler/include/covscript/compiler/phase/assembleDefine.hpp
         compiler/src/covscript/compiler/phase/assembleDefine.cpp
         compiler/src/covscript/compiler/variable.cpp
-        compiler/include/covscript/compiler/asm/codeWriter.hpp)
+        compiler/include/covscript/compiler/asm/codeWriter.hpp
+        compiler/include/covscript/compiler/typeDeduce.hpp
+        compiler/src/covscript/compiler/typeDeduce.cpp)
 
 set(runtime_SRC
         runtime/include/covscript/runtime/vm_instance.hpp
@@ -200,6 +202,7 @@ endmacro()
 add_compiler_benchmark_target(copy)
 add_compiler_benchmark_target(bytebuffer)
 add_compiler_test_target(typeflags)
+add_compiler_test_target(typededuce)
 
 add_shared_benchmark_target(any)
 target_compile_features(shared-bench-any PRIVATE cxx_std_17)

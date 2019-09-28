@@ -17,7 +17,8 @@ namespace cs {
             TypeFlags(TypeFlags &&) = delete;
 
             enum {
-                TYPE_UNKNOWN    = 0x0000,
+                TYPE_ANY        = 0x0000,
+                TYPE_UNKNOWN    = 0xFFFF,
 
                 PRIMITIVE       = 0x1000,
                 NUMERIC         = 0x1100,
@@ -87,6 +88,14 @@ namespace cs {
                 return _typeFlag;
             }
 
+            bool isUnknownType() const {
+                return getTypeFlag() == TypeFlags::TYPE_UNKNOWN;
+            }
+
+            bool isAnyType() const {
+                return !isUnknownType();
+            }
+
             bool isPrimitiveType() const {
                 return TypeFlags::hasFlag(getTypeFlag(), TypeFlags::PRIMITIVE);
             }
@@ -130,6 +139,8 @@ namespace cs {
             bool isLambdaType() const {
                 return TypeFlags::hasFlag(getTypeFlag(), TypeFlags::LAMBDA);
             }
+            
+            VMString toString() const;
         };
 
         class PrimitiveType : public Type {

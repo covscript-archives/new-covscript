@@ -11,6 +11,8 @@ int main() {
     TypeFlags::setFlag(flags, TypeFlags::BOOL);
     // is primitive
     assert(TypeFlags::hasFlag(flags, TypeFlags::PRIMITIVE));
+    // is any
+    assert(TypeFlags::hasFlag(flags, TypeFlags::TYPE_ANY));
     // is not object
     assert(!TypeFlags::hasFlag(flags, TypeFlags::OBJECT));
     // is not int
@@ -56,8 +58,10 @@ int main() {
     assert(LambdaType().isLambdaType());
     assert(LambdaType().isCallableType());
     assert(LambdaType().isObjectType());
+    assert(LambdaType().isAnyType());
     assert(!LambdaType().isFunctionType());
     assert(!LambdaType().isPrimitiveType());
+    assert(!LambdaType().isUnknownType());
 
     assert(IntType().isNumericType());
     assert(IntType().isPrimitiveType());
