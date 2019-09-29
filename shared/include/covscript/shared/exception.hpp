@@ -44,7 +44,8 @@ namespace cs {
 #else
             throw exception;
 #endif
+        }
 	}
 } // namespace cs
 
-#define COVSDK_RTERR(msg) COVSDK_LOGCR(msg) cs::throw_ex<cs::runtime_error>(msg);
+#define COVSDK_RTERR(msg) COVSDK_LOGCR(msg) cs::shared::throw_ex<cs::shared::runtime_error>(msg);

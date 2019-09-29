@@ -9,7 +9,7 @@ namespace cs {
 	}
 } // namespace cs
 
-class cs::runtime::any final {
+class cs::shared::any final {
 public:
 	using typeid_t = std::type_index;
 	using byte_t = unsigned char;
@@ -132,7 +132,7 @@ private:
 	{
 		switch (m_data.status) {
 		case stor_status::null:
-			throw_ex<cs::runtime_error>("Access null any object.");
+			cs::shared::throw_ex<cs::shared::runtime_error>("Access null any object.");
 		case stor_status::data:
 			return reinterpret_cast<stor_base *>(m_data.impl.data);
 		case stor_status::ptr:
@@ -145,7 +145,7 @@ private:
 	{
 		switch (m_data.status) {
 		case stor_status::null:
-			throw_ex<cs::runtime_error>("Access null any object.");
+			cs::shared::throw_ex<cs::shared::runtime_error>("Access null any object.");
 		case stor_status::data:
 			return reinterpret_cast<const stor_base *>(m_data.impl.data);
 		case stor_status::ptr:
@@ -276,7 +276,7 @@ public:
 	{
 		stor_base *ptr = get_handler();
 		if (ptr->type() != typeid(T))
-			throw_ex<cs::runtime_error>("Access wrong type of any.");
+			cs::shared::throw_ex<cs::shared::runtime_error>("Access wrong type of any.");
 		return static_cast<stor_impl<T> *>(ptr)->data;
 	}
 
@@ -286,7 +286,7 @@ public:
 	{
 		const stor_base *ptr = get_handler();
 		if (ptr->type() != typeid(T))
-			throw_ex<cs::runtime_error>("Access wrong type of any.");
+			cs::shared::throw_ex<cs::shared::runtime_error>("Access wrong type of any.");
 		return static_cast<const stor_impl<T> *>(ptr)->data;
 	}
 };
