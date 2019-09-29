@@ -146,7 +146,7 @@ private:
   Derived<StorageType<U>>* getDerived(bool checkCast) const {
     typedef StorageType<U> T;
 
-    auto derived = dynamic_cast<Derived<T>*>(_ptr);
+    auto derived = static_cast<Derived<T>*>(_ptr);
 
     if (checkCast && !derived)
       throw std::bad_cast();
