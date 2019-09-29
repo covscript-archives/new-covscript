@@ -6,10 +6,6 @@
 
 namespace cs {
     namespace compiler {
-        Type::Type(TypeFlag typeFlag)
-            : _typeFlag(typeFlag) {
-        }
-
         VMString Type::toString() const {
             switch (getTypeFlag()) {
                 case TypeFlags::TYPE_ANY:

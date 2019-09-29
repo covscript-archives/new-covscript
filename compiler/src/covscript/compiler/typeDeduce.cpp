@@ -3,12 +3,16 @@
 //
 #include <covscript/compiler/typeDeduce.hpp>
 
-// To simplify code and make code readable
-#define anyType() cs::compiler::Type(cs::compiler::TypeFlags::TYPE_ANY)
-#define unknownType() cs::compiler::Type(cs::compiler::TypeFlags::TYPE_UNKNOWN)
-
 namespace cs {
     namespace compiler {
+        constexpr Type anyType() {
+            return Type(TypeFlags::TYPE_ANY);
+        }
+
+        constexpr Type unknownType() {
+            return Type(TypeFlags::TYPE_UNKNOWN);
+        }
+
         /**
          * Type promotion state machine.
          * Char, Bool -> Int -> Float -> String (maybe)
