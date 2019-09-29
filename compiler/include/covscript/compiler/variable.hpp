@@ -139,7 +139,23 @@ namespace cs {
             bool isLambdaType() const {
                 return TypeFlags::hasFlag(getTypeFlag(), TypeFlags::LAMBDA);
             }
-            
+
+            bool operator==(Type &&other) const {
+                return getTypeFlag() == other.getTypeFlag();
+            }
+
+            bool operator==(const Type &other) const {
+                return getTypeFlag() == other.getTypeFlag();
+            }
+
+            bool operator!=(Type &&other) const {
+                return getTypeFlag() != other.getTypeFlag();
+            }
+
+            bool operator!=(const Type &other) const {
+                return getTypeFlag() != other.getTypeFlag();
+            }
+
             VMString toString() const;
         };
 

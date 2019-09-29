@@ -203,6 +203,7 @@ add_compiler_benchmark_target(copy)
 add_compiler_benchmark_target(bytebuffer)
 add_compiler_test_target(typeflags)
 add_compiler_test_target(typededuce)
+add_compiler_test_target(exprdeduce)
 
 add_shared_benchmark_target(any)
 target_compile_features(shared-bench-any PRIVATE cxx_std_17)
