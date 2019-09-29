@@ -14,16 +14,16 @@ namespace cs {
         }
 
         void PhaseAssembleDefine::preparePhase(CompilerData &compilerData) {
-            PHASE_LOG("[Assemble:Define] Enter");
+            printf("[Assemble:Define] Enter\n");
         }
 
         void PhaseAssembleDefine::runPhase(CompilerData &compilerData,
                                            CovScriptParser::CompilationUnitContext *compilationUnit) {
-            PHASE_LOG("[Assemble:Define] Run");
+            printf("[Assemble:Define] Run with %p\n", compilationUnit);
         }
 
         void PhaseAssembleDefine::postPhase(CompilerData &compilerData) {
-            PHASE_LOG("[Assemble:Define] Exit");
+            printf("[Assemble:Define] Exit\n");
         }
     }
 }

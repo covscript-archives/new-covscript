@@ -14,15 +14,15 @@ namespace cs {
         }
 
         void PhaseAssembleScan::preparePhase(CompilerData &compilerData) {
-            PHASE_LOG("[Assemble:Scan] Enter");
+            printf("[Assemble:Scan] Enter\n");
         }
 
         void PhaseAssembleScan::runPhase(CompilerData &compilerData, CovScriptParser::CompilationUnitContext *compilationUnit) {
-            PHASE_LOG("[Assemble:Scan] Run");
+            printf("[Assemble:Scan] Run with %p\n", compilationUnit);
         }
 
         void PhaseAssembleScan::postPhase(CompilerData &compilerData) {
-            PHASE_LOG("[Assemble:Scan] Exit");
+            printf("[Assemble:Scan] Exit\n");
         }
     }
 }

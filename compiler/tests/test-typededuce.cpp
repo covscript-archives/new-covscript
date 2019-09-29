@@ -5,6 +5,8 @@
 
 #include <covscript/compiler/typeDeduce.hpp>
 #include <covscript/compiler/compiler.hpp>
+#include <covscript/compiler/phase/assembleScan.hpp>
+#include <covscript/compiler/phase/assembleDefine.hpp>
 
 using namespace cs::compiler;
 
@@ -39,15 +41,17 @@ public:
 
 protected:
     void preparePhase(CompilerData &compilerData) override {
+        printf("[Verify:TypeDeduceTest]: Enter\n");
     }
 
     void runPhase(CompilerData &compilerData, CovScriptParser::CompilationUnitContext *compilationUnit) override {
+        printf("[Verify:TypeDeduceTest]: Run with %p\n", compilationUnit);
         DeduceVisitor visitor;
         visitor.visit(compilationUnit);
     }
 
     void postPhase(CompilerData &compilerData) override {
-
+        printf("[Verify:TypeDeduceTest]: Exit\n");
     }
 };
 
@@ -68,7 +72,10 @@ int main() {
         "var arr1 = {1, 2, 4}\n"
         "var map1 = (0:1, 1:2)\n"));
 
-    compiler.registerPhase<TypeDeduceTestPhase>();
+    compiler.setVerbose(true);
+    compiler.registerPhase<PhaseAssembleScan>();
+    compiler.registerPhase<PhaseAssembleDefine>();
+    compiler.addPhase(makePtr<TypeDeduceTestPhase>());
     compiler.compile();
     return 0;
 }

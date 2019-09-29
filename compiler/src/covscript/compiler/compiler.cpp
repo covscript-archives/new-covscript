@@ -38,9 +38,13 @@ namespace cs {
             this->constructASTs();
             for (auto &phase : _compilerPhases) {
                 for (auto &elem : _privateData.getCompileFiles()) {
-                    auto unit = elem.second->compilationUnit();
+                    if (_verbose) {
+                        printf("[Compiler] Running phase %s on file %s\n",
+                            phase->getPhaseName().c_str(),
+                            elem.first->getSourceName().c_str());
+                    }
                     preparePhase(phase);
-                    runPhase(phase, unit);
+                    runPhase(phase, elem.second.second);
                     postPhase(phase);
                 }
             }
@@ -54,13 +58,13 @@ namespace cs {
                 parser->getLexer().removeErrorListeners();
                 parser->addErrorListener(&_errorHandler);
                 parser->getLexer().addErrorListener(&_errorHandler);
-                elem.second = parser;
+                elem.second = std::make_pair(parser, parser->compilationUnit());
             }
         }
 
         CovScriptCompiler::~CovScriptCompiler() {
             for (auto &elem : _privateData.getCompileFiles()) {
-                delete elem.second;
+                delete elem.second.first;
             }
         }
     }

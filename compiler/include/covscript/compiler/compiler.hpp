@@ -19,7 +19,8 @@ namespace cs {
     namespace compiler {
         class CompilerData {
         public:
-            using CompileFiles = std::unordered_map<Ptr<SourceFile>, Parser *>;
+            using CompileFiles = std::unordered_map<Ptr<SourceFile>,
+                std::pair<Parser *, Parser::CompilationUnitContext *>>;
 
         private:
             Scope *_globalScope;
@@ -52,16 +53,17 @@ namespace cs {
 
             virtual ~CompilerPhase() = default;
 
-            const VMString &getPhaseName() {
-                return _phaseName;
-            }
-
             virtual void preparePhase(CompilerData &compilerData) = 0;
 
             virtual void runPhase(CompilerData &compilerData,
                                   CovScriptParser::CompilationUnitContext *compilationUnit) = 0;
 
             virtual void postPhase(CompilerData &compilerData) = 0;
+
+        public:
+            const VMString &getPhaseName() {
+                return _phaseName;
+            }
         };
 
         class BaseCompiler {
@@ -86,6 +88,10 @@ namespace cs {
             void registerPhase() {
                 _compilerPhases.push_back(makePtr<T>());
             }
+
+            void addPhase(const Ptr<CompilerPhase> &phase) {
+                _compilerPhases.push_back(phase);
+            }
         };
 
         class CompilerErrorHandler : public antlr4::BaseErrorListener {
@@ -98,6 +104,7 @@ namespace cs {
         class CovScriptCompiler : public BaseCompiler {
         private:
             CompilerErrorHandler _errorHandler;
+            bool _verbose = false;
 
         private:
             void constructASTs();
@@ -108,7 +115,11 @@ namespace cs {
             ~CovScriptCompiler() override;
 
             void addFile(const Ptr<SourceFile> &file) {
-                _privateData.getCompileFiles()[file] = nullptr;
+                _privateData.getCompileFiles()[file] = std::make_pair(nullptr, nullptr);
+            }
+
+            void setVerbose(bool verbose) {
+                this->_verbose = verbose;
             }
 
             void compile();
