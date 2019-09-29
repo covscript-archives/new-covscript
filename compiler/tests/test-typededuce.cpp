@@ -62,7 +62,11 @@ int main() {
         "var promotion1 = 1 + 1.0\n"
         "var promotion2 = 'c' + \"hello\"\n"
         "var promotion3 = 'c' + 'f'\n"
-        "var promotion4 = 3 + 1 * 0.9"));
+        "var promotion4 = 3 + 1 * 0.9\n"
+        "var promotion5 = a.toString()\n"
+        "var promotion6 = c.toFloat()\n"
+        "var arr1 = {1, 2, 4}\n"
+        "var map1 = (0:1, 1:2)\n"));
 
     compiler.registerPhase<TypeDeduceTestPhase>();
     compiler.compile();
