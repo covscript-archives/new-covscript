@@ -36,7 +36,11 @@ namespace cs {
 			// Null
 			null
 		};
+		class vm_expression {
+
+		};
 		class vm_instrument {
+
 		};
 		class vm_class {
 		};
@@ -78,6 +82,42 @@ namespace cs {
 						COVSDK_RTERR("Pop empty stack.");
 				}
 			}
+			/*
+				VM Instructions
+				Note: Every instruction execution will increase PC register except jumping instruction
+			*/
+			/*
+				Expression Instruction
+				Description: Evaluate a expression, which generally is a subtree of AST
+				Affect: 	 Depends on different expression
+							 (1) Calling Function:   push fcall frame
+							 (2) Throwing Exception: trigger stack unwinding
+			*/
+			void do_expr(const vm_expression&);
+			/*
+				Direct Jumping
+				Description: Modify the Program Count register
+				Affect:		 Same as description
+			*/
+			void do_jmp(std::size_t);
+			/*
+				Conditional Jumping
+				Description: Modify the Program Count register if condition is true
+				Affect:		 Save as description
+			*/
+			void do_jcond(const vm_expression&, std::size_t);
+			/*
+				Push a scope frame into stack
+				Description: Push a scope label into stack
+				Affect:		 Same as description
+			*/
+			void do_pushs();
+			/*
+				Pop a scope frame from stack
+				Description: Trigger stack unwinding until scope label
+				Affect:		 Same as description
+			*/
+			void do_pops();
 		};
 	} // namespace runtime
 } // namespace cs
