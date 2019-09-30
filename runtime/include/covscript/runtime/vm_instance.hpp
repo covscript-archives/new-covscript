@@ -37,7 +37,8 @@ namespace cs {
 			null
 		};
 		class vm_expression {
-
+		public:
+			shared::any evaluate();
 		};
 		class vm_instrument {
 
