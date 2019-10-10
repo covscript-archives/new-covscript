@@ -3,8 +3,8 @@
 //
 #pragma once
 
-#include <covscript/compiler/variable.h>
-#include <covscript/compiler/callState.h>
+#include <covscript/compiler/variable.hpp>
+#include <covscript/compiler/callState.hpp>
 #include <unordered_map>
 #include <utility>
 
@@ -16,6 +16,10 @@ namespace cs {
             std::unordered_map<VMString, Variable *> _variables;
 
         public:
+            explicit Scope(Scope *parent);
+
+            ~Scope() = default;
+
             Variable *search(const VMString &name);
 
             Scope *getParent() { return _parent; };

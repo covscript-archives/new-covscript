@@ -9,7 +9,7 @@ namespace cs {
 	}
 } // namespace cs
 
-class cs::runtime::any final {
+class cs::shared::any final {
 public:
 	using typeid_t = std::type_index;
 	using byte_t = unsigned char;

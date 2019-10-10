@@ -14,11 +14,11 @@ namespace cs {
         using VMChar = cs::shared::vm_char;
         using VMString = cs::shared::vm_string;
 
-        using RuntimeException = cs::shared::runtime_error;
+        using RuntimeException = cs::runtime_error;
 
         template<typename T, typename... ArgsT>
         void compilerThrow(ArgsT &&... args) {
-            cs::shared::throw_ex<T>(std::forward<ArgsT>(args)...);
+            cs::throw_ex<T>(std::forward<ArgsT>(args)...);
         }
 
         template<typename T>
