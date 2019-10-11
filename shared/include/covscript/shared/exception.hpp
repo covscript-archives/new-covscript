@@ -5,6 +5,7 @@
 #include <string>
 
 namespace cs {
+    namespace shared {
     class runtime_error final : public std::exception {
         std::string mWhat = "Runtime Error";
 
