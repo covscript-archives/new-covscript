@@ -3,7 +3,7 @@
 //
 #pragma once
 
-#include <covscript/compiler/sharedTypes.h>
+#include <covscript/compiler/sharedTypes.hpp>
 #include <unordered_map>
 
 namespace cs {
@@ -17,7 +17,8 @@ namespace cs {
             TypeFlags(TypeFlags &&) = delete;
 
             enum {
-                TYPE_UNKNOWN    = 0x0000,
+                TYPE_ANY        = 0x0000,
+                TYPE_UNKNOWN    = 0xFFFF,
 
                 PRIMITIVE       = 0x1000,
                 NUMERIC         = 0x1100,
@@ -79,12 +80,22 @@ namespace cs {
             TypeFlag _typeFlag;
 
         public:
-            explicit Type(TypeFlag typeFlag);
+            constexpr explicit Type(TypeFlag typeFlag)
+                : _typeFlag(typeFlag) {
+            }
 
-            virtual ~Type() = default;
+            ~Type() = default;
 
             TypeFlag getTypeFlag() const {
                 return _typeFlag;
+            }
+
+            bool isUnknownType() const {
+                return getTypeFlag() == TypeFlags::TYPE_UNKNOWN;
+            }
+
+            bool isAnyType() const {
+                return !isUnknownType();
             }
 
             bool isPrimitiveType() const {
@@ -130,72 +141,90 @@ namespace cs {
             bool isLambdaType() const {
                 return TypeFlags::hasFlag(getTypeFlag(), TypeFlags::LAMBDA);
             }
+
+            bool operator==(Type &&other) const {
+                return getTypeFlag() == other.getTypeFlag();
+            }
+
+            bool operator==(const Type &other) const {
+                return getTypeFlag() == other.getTypeFlag();
+            }
+
+            bool operator!=(Type &&other) const {
+                return getTypeFlag() != other.getTypeFlag();
+            }
+
+            bool operator!=(const Type &other) const {
+                return getTypeFlag() != other.getTypeFlag();
+            }
+
+            VMString toString() const;
         };
 
         class PrimitiveType : public Type {
         public:
             explicit PrimitiveType(TypeFlag typeFlag);
-            ~PrimitiveType() override = default;
+            ~PrimitiveType() = default;
         };
 
         class NumericType : public PrimitiveType {
         public:
             explicit NumericType(TypeFlag typeFlag);
-            ~NumericType() override = default;
+            ~NumericType() = default;
         };
 
         class IntType : public NumericType {
         public:
             IntType();
-            ~IntType() override = default;
+            ~IntType() = default;
         };
 
         class FloatType : public NumericType {
         public:
             FloatType();
-            ~FloatType() override = default;
+            ~FloatType() = default;
         };
 
         class StringType : public PrimitiveType {
         public:
             StringType();
-            ~StringType() override = default;
+            ~StringType() = default;
         };
 
         class CharType : public PrimitiveType {
         public:
             CharType();
-            ~CharType() override = default;
+            ~CharType() = default;
         };
 
         class BoolType : public PrimitiveType {
         public:
             BoolType();
-            ~BoolType() override = default;
+            ~BoolType() = default;
         };
 
         class ObjectType : public Type {
         public:
             ObjectType();
-            ~ObjectType() override = default;
+            ~ObjectType() = default;
         };
 
         class CallableType : public Type {
         public:
             explicit CallableType(TypeFlag typeFlag);
-            ~CallableType() override = default;
+            ~CallableType() = default;
         };
 
         class FunctionType : public CallableType {
         public:
             FunctionType();
-            ~FunctionType() override = default;
+            ~FunctionType() = default;
         };
 
         class LambdaType : public CallableType {
         public:
             LambdaType();
-            ~LambdaType() override = default;
+            ~LambdaType() = default;
         };
 
         class Variable {

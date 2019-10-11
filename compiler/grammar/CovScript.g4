@@ -1,7 +1,7 @@
 grammar CovScript;
 
 @lexer::header {
-#include <covscript/compiler/unicode.h>
+#include <covscript/compiler/utils/unicode.hpp>
 }
 
 // Parser
@@ -213,7 +213,7 @@ multiplicativeExpressionRest
     ;
 
 unaryExpression
-    :   (ADD | SUB | BANG | KEYWORD_NOT | BITNOT) unaryExpression
+    :   (ADD | SUB | BANG | KEYWORD_NOT | BITNOT) unaryExpression // ADD and SUB represent positive and negative
     |   preIncrementExpression
     |   preDecrementExpression
     |   castExpression
@@ -277,7 +277,8 @@ memberVisitExpression
     ;
 
 literalExpression
-    :   NumberLiteral
+    :   IntegerLiteral
+    |   FloatingPointLiteral
     |   StringLiteral
     |   CharacterLiteral
     |   BooleanLiteral
@@ -383,11 +384,6 @@ KEYWORD_DEFAULT: 'default';
 KEYWORD_WITH: 'with';
 
 // Literal
-NumberLiteral
-    :   IntegerLiteral
-    |   FloatingPointLiteral
-    ;
-
 IntegerLiteral
 	:	DecimalIntegerLiteral
 	|	HexIntegerLiteral

@@ -5,7 +5,7 @@
 #define COVSCRIPT_SDK_DEBUG
 #define CS_COMPILER_PHASE_IMPL
 
-#include <covscript/compiler/phase/assembleScan.h>
+#include <covscript/compiler/phase/assembleScan.hpp>
 
 namespace cs {
     namespace compiler {
@@ -14,15 +14,13 @@ namespace cs {
         }
 
         void PhaseAssembleScan::preparePhase(CompilerData &compilerData) {
-            PHASE_LOG("[Assemble:Scan] Enter");
         }
 
-        void PhaseAssembleScan::runPhase(CompilerData &compilerData, CovScriptParser::CompilationUnitContext *compilationUnit) {
-            PHASE_LOG("[Assemble:Scan] Run");
+        void PhaseAssembleScan::runPhase(CompilerData &compilerData,
+                                         CovScriptParser::CompilationUnitContext *compilationUnit) {
         }
 
         void PhaseAssembleScan::postPhase(CompilerData &compilerData) {
-            PHASE_LOG("[Assemble:Scan] Exit");
         }
     }
 }

@@ -3,14 +3,15 @@
 //
 
 #include <covscript/shared/utility.hpp>
+#include <covscript/shared/exception.hpp>
 
 namespace cs {
-    namespace shared {
-        // exception.hpp
-        namespace event {
-            event_type exception_raised;
-        }
+    // exception.hpp
+    namespace event {
+        shared::event_type exception_raised;
+    }
 
+    namespace shared {
         // utility.hpp
         std::chrono::time_point<std::chrono::high_resolution_clock>
         timer::m_timer(std::chrono::high_resolution_clock::now());
