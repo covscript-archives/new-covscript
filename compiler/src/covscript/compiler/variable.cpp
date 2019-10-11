@@ -2,6 +2,7 @@
 // Created by kiva on 2019/9/24.
 //
 
+#include <utility>
 #include <covscript/compiler/variable.hpp>
 
 namespace cs {
@@ -73,6 +74,12 @@ namespace cs {
 
         LambdaType::LambdaType()
             : CallableType(TypeFlags::LAMBDA) {
+        }
+
+        Variable::Variable(VMString variableName,
+                           Parser::ExpressionContext *variableInit)
+            : _variableName(std::move(variableName)), _variableInit(variableInit),
+              _isLiteral(false), _variableType(TypeFlags::TYPE_ANY) {
         }
     }
 }

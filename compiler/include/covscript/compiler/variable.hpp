@@ -4,6 +4,7 @@
 #pragma once
 
 #include <covscript/compiler/sharedTypes.hpp>
+#include <covscript/compiler/parser.hpp>
 #include <unordered_map>
 #include <vector>
 
@@ -251,6 +252,7 @@ namespace cs {
         class Variable {
         private:
             VMString _variableName;
+            Parser::ExpressionContext *_variableInit;
             bool _isLiteral;
             Type _variableType;
 
@@ -258,6 +260,8 @@ namespace cs {
             void setLiteral(bool isLiteral) { _isLiteral = isLiteral; }
 
         public:
+            Variable(VMString variableName, Parser::ExpressionContext *variableInit);
+
             bool isLiteral() const { return _isLiteral; }
 
             const VMString &getName() const { return _variableName; }

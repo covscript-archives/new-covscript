@@ -94,7 +94,6 @@ set(compiler_SRC
         compiler/include/covscript/compiler/scope.hpp
         compiler/include/covscript/compiler/variable.hpp
         compiler/src/covscript/compiler/scope.cpp
-        compiler/include/covscript/compiler/callState.hpp
         compiler/include/covscript/compiler/compiler.hpp
         compiler/include/covscript/compiler/sharedTypes.hpp
         compiler/src/covscript/compiler/compiler.cpp
