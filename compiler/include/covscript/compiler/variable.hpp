@@ -5,6 +5,7 @@
 
 #include <covscript/compiler/sharedTypes.hpp>
 #include <unordered_map>
+#include <vector>
 
 namespace cs {
     namespace compiler {
@@ -210,9 +211,29 @@ namespace cs {
         };
 
         class CallableType : public Type {
+        private:
+            Type _returnType;
+            std::vector<Type> _paramTypes;
+
         public:
             explicit CallableType(TypeFlag typeFlag);
             ~CallableType() = default;
+
+            Type getReturnType() const {
+                return _returnType;
+            }
+
+            const std::vector<Type>& getParamTypes() const {
+                return _paramTypes;
+            }
+
+            void setReturnType(Type type) {
+                this->_returnType = type;
+            }
+
+            void setParamTypes(const std::vector<Type>& paramTypes) {
+                this->_paramTypes = paramTypes;
+            }
         };
 
         class FunctionType : public CallableType {

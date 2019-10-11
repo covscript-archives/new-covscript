@@ -40,7 +40,7 @@ namespace cs {
         }
 
         CallableType::CallableType(TypeFlag typeFlag)
-            : Type(typeFlag) {
+            : Type(typeFlag), _returnType(TypeFlags::TYPE_ANY) {
         }
 
         IntType::IntType()
