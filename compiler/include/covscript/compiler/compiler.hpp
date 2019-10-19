@@ -3,6 +3,10 @@
 //
 #pragma once
 
+#ifndef NDEBUG
+#define COVSCRIPT_SDK_DEBUG
+#endif
+
 #ifdef CS_COMPILER_PHASE_IMPL
 #define PHASE_LOG(msg) COVSDK_LOGEV(msg)
 #else

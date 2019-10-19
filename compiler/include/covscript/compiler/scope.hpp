@@ -42,6 +42,8 @@ namespace cs {
 
             Scope *getParent() { return _parent; };
 
+            Scope *newChild();
+
             void preserve(const VMString &name);
 
             void preserve(const Parameter &param);

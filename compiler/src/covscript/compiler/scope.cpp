@@ -36,5 +36,9 @@ namespace cs {
         void Scope::preserve(const Parameter &param) {
             preserve(param.getName());
         }
+
+        Scope *Scope::newChild() {
+            return new Scope(this);
+        }
     }
 }
