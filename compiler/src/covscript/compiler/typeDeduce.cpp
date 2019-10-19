@@ -52,9 +52,16 @@ namespace cs {
                 return unknownType();
             }
 
+            Type condType = deduceConditionalLogicExpr(expr->conditionalLogicExpression());
+
             if (expr->COLON() == nullptr && expr->QUESTION() == nullptr) {
-                return deduceConditionalLogicExpr(expr->conditionalLogicExpression());
+                return condType;
             } else {
+                if (!condType.isBoolType()) {
+                    // TODO: report semantic error
+                    return unknownType();
+                }
+                // TODO: check condition result and deduce result type
                 return anyType();
             }
         }
