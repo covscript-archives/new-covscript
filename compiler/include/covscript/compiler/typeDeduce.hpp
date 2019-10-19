@@ -10,6 +10,8 @@ namespace cs {
     namespace compiler {
         /**
          * The TypeDeduce class deduces a supposed type form an expression.
+         * The "Type Deduce" here is not exactly what it sounds like.
+         * It just yields "What type the expression result should be" from AST.
          */
         class TypeDeduce {
         public:

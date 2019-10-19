@@ -56,6 +56,7 @@ namespace cs {
 
             if (expr->COLON() == nullptr && expr->QUESTION() == nullptr) {
                 return condType;
+
             } else {
                 if (!condType.isBoolType()) {
                     // TODO: report semantic error
@@ -303,6 +304,7 @@ namespace cs {
 
             auto lambdaExpr = expr->lambdaExpression();
             if (lambdaExpr != nullptr) {
+                // TODO: fixme
                 return LambdaType();
             }
 
@@ -331,6 +333,7 @@ namespace cs {
             }
 
             // we regard null as any in case they are assigned later
+            // TODO: replace with a nullType() ?
             return anyType();
         }
 
