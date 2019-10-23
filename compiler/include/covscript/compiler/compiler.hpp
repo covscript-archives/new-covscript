@@ -21,19 +21,58 @@
 
 namespace cs {
     namespace compiler {
+        enum class OptimizationLevel {
+            NONE_OPT,
+            SPEED_FIRST,
+            QUALITY_FIRST,
+        };
+
+        /**
+         * The data holder shared between all phases.
+         */
         class CompilerData {
         public:
             using CompileFiles = std::unordered_map<Ptr<SourceFile>,
                 std::pair<Parser *, Parser::CompilationUnitContext *>>;
 
         private:
-            Scope *_globalScope;
+            bool _verboseOutput = false;
+            OptimizationLevel _optLevel;
+            Scope *_globalScope = nullptr;
             CompileFiles _compileFiles;
 
         public:
             Scope *getGlobalScope() { return _globalScope; }
 
             CompileFiles &getCompileFiles() { return _compileFiles; }
+
+            bool isVerboseOutput() const {
+                return _verboseOutput;
+            }
+
+            void setVerboseOutput(bool verboseOutput) {
+                _verboseOutput = verboseOutput;
+            }
+
+            OptimizationLevel getOptimizationLevel() const {
+                return _optLevel;
+            }
+
+            void setOptimizationLevel(OptimizationLevel level) {
+                _optLevel = level;
+            }
+
+            bool isOptimizationEnabled() {
+                return getOptimizationLevel() != OptimizationLevel::NONE_OPT;
+            }
+
+            bool isSpeedOptimization() {
+                return getOptimizationLevel() == OptimizationLevel::SPEED_FIRST;
+            }
+
+            bool isQualityOptimization() {
+                return getOptimizationLevel() == OptimizationLevel::QUALITY_FIRST;
+            }
         };
 
         class CompilerPhase {
@@ -108,7 +147,6 @@ namespace cs {
         class CovScriptCompiler : public BaseCompiler {
         private:
             CompilerErrorHandler _errorHandler;
-            bool _verbose = false;
 
         private:
             void constructASTs();
@@ -123,7 +161,11 @@ namespace cs {
             }
 
             void setVerbose(bool verbose) {
-                this->_verbose = verbose;
+                _privateData.setVerboseOutput(verbose);
+            }
+
+            void setOptimizationLevel(OptimizationLevel level) {
+                _privateData.setOptimizationLevel(level);
             }
 
             void compile();
