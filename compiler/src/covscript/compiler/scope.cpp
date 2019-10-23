@@ -13,7 +13,7 @@ namespace cs {
         Ptr<Variable> Scope::search(const VMString &name) {
             auto iter = _variables.find(name);
             return iter == _variables.end()
-                   ? (_parent == nullptr ? nullptr : _parent->search(name))
+                   ? (isRootScope() ? nullptr : _parent->search(name))
                    : iter->second;
         }
 
@@ -38,7 +38,22 @@ namespace cs {
         }
 
         Scope *Scope::newChild() {
-            return new Scope(this);
+            auto child = new Scope(this);
+            // Add child to the head
+            child->_nextSibling = _nextSibling;
+            _nextSibling = child;
+            return child;
+        }
+
+        Scope *Scope::findChild(int32_t hash) {
+            Scope *current = _nextSibling;
+            while (current) {
+                if (current->getHash() == hash) {
+                    return current;
+                }
+                current = current->_nextSibling;
+            }
+            return nullptr;
         }
     }
 }
