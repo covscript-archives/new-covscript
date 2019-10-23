@@ -20,7 +20,7 @@ namespace cs {
          * @param tailing candidate type
          * @param includingString Whether String type should be included
          */
-        static void typeStateTrans(Type &heading, Type &tailing, bool includingString) {
+        static void typeCoercionTrans(Type &heading, Type &tailing, bool includingString) {
             switch (heading.getTypeFlag()) {
                 case TypeFlags::CHAR:
                 case TypeFlags::BOOL:
@@ -129,7 +129,7 @@ namespace cs {
 
                         // State transfer
                         // Bool, Char -> Int -> Float -> String
-                        typeStateTrans(heading, tailing, true);
+                        typeCoercionTrans(heading, tailing, true);
 
                         // When a type is promoted to String
                         // There's no need to check again.
@@ -164,7 +164,7 @@ namespace cs {
 
                         // State transfer
                         // Bool, Char -> Int -> Float
-                        typeStateTrans(heading, tailing, false);
+                        typeCoercionTrans(heading, tailing, false);
 
                         // When a type is promoted to Float
                         // There's no need to check again.
