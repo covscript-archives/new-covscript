@@ -43,10 +43,14 @@ namespace cs {
 
         class CFGBasicBlock : public CFGElement {
         private:
+        public:
+            bool isBlock() override { return true; }
         };
 
         class CFGLoop : public CFGElement {
         private:
+        public:
+            bool isLoop() override { return true; }
         };
 
         class CFGEdge : public CFGElement {
