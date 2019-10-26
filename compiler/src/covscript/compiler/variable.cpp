@@ -25,8 +25,6 @@ namespace cs {
                     return "function";
                 case TypeFlags::LAMBDA:
                     return "lambda";
-                case TypeFlags::OBJECT:
-                    return "object";
                 default:
                     return "<unknown>";
             }
@@ -62,10 +60,6 @@ namespace cs {
 
         BoolType::BoolType()
             : PrimitiveType(TypeFlags::BOOL) {
-        }
-
-        ObjectType::ObjectType()
-            : Type(TypeFlags::OBJECT) {
         }
 
         FunctionType::FunctionType()

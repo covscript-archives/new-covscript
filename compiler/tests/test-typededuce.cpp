@@ -13,14 +13,14 @@ using namespace cs::compiler;
 class DeduceVisitor : public CovScriptBaseVisitor {
 public:
     antlrcpp::Any visitVariableDeclStatement(CovScriptParser::VariableDeclStatementContext *ctx) override {
-        if (ctx->IDENTIFIER() != nullptr) {
-            printf("declare variable: %s", ctx->IDENTIFIER()->getText().c_str());
+        if (ctx->nameAndType() != nullptr) {
+            printf("declare variable: %s", ctx->nameAndType()->IDENTIFIER()->getText().c_str());
 
         } else if (ctx->variableBindingList() != nullptr) {
             printf("declare variables: ");
             auto list = ctx->variableBindingList();
-            for (auto id : list->IDENTIFIER()) {
-                printf("%s, ", id->getText().c_str());
+            for (auto id : list->nameAndType()) {
+                printf("%s, ", id->IDENTIFIER()->getText().c_str());
             }
         }
 

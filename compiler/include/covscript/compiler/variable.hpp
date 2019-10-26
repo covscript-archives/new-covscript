@@ -30,7 +30,6 @@ namespace cs {
                 CHAR            = 0x1202,
                 STRING          = 0x1204,
 
-                OBJECT          = 0x2000,
                 CALLABLE        = 0x2100,
                 FUNCTION        = 0x2101,
                 LAMBDA          = 0x2102,
@@ -68,8 +67,6 @@ namespace cs {
         //////////////////////////////////////
 
         ////////////////////// Object Types
-        class ObjectType;
-
         class CallableType;
 
         class FunctionType;
@@ -126,10 +123,6 @@ namespace cs {
 
             bool isStringType() const {
                 return TypeFlags::hasFlag(getTypeFlag(), TypeFlags::STRING);
-            }
-
-            bool isObjectType() const {
-                return TypeFlags::hasFlag(getTypeFlag(), TypeFlags::OBJECT);
             }
 
             bool isCallableType() const {
@@ -203,12 +196,6 @@ namespace cs {
         public:
             BoolType();
             ~BoolType() = default;
-        };
-
-        class ObjectType : public Type {
-        public:
-            ObjectType();
-            ~ObjectType() = default;
         };
 
         class CallableType : public Type {
@@ -294,10 +281,6 @@ namespace cs {
 
             bool isStringType() const {
                 return _variableType.isStringType();
-            }
-
-            bool isObjectType() const {
-                return _variableType.isObjectType();
             }
 
             bool isCallableType() const {

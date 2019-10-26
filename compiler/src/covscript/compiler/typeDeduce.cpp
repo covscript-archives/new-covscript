@@ -210,7 +210,7 @@ namespace cs {
                 return deducePrimaryExpr(primaryExpr);
             }
 
-            return Type(TypeFlags::TYPE_UNKNOWN);
+            return unknownType();
         }
 
         Type TypeDeduce::deduceCastExpr(Parser::CastExpressionContext *expr) {
@@ -276,7 +276,8 @@ namespace cs {
 
             auto typeIdExpr = expr->typeidExpression();
             if (typeIdExpr != nullptr) {
-                return ObjectType();
+                // TODO: support typed-any
+                return anyType();
             }
 
             return unknownType();
@@ -327,9 +328,11 @@ namespace cs {
             } else if (expr->BooleanLiteral() != nullptr) {
                 return BoolType();
             } else if (expr->arrayLiteral() != nullptr) {
-                return ObjectType();
+                // TODO: support typed-any
+                return anyType();
             } else if (expr->mapLiteral() != nullptr) {
-                return ObjectType();
+                // TODO: support typed-any
+                return anyType();
             }
 
             // we regard null as any in case they are assigned later
