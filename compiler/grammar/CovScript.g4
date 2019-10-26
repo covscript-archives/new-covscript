@@ -11,15 +11,15 @@ compilationUnit
 
 // Statements
 statement
-    :   packageDeclStatement SEMI?
-    |   variableDeclStatement SEMI?
+    :   packageDeclStatement
+    |   variableDeclStatement
     |   functionDeclStatement
-    |   importStatement SEMI?
-    |   expressionStatement SEMI?
-    |   returnStatement SEMI?
-    |   throwStatement SEMI?
-    |   loopControlStatement SEMI?
-    |   blockDeclStatement SEMI?
+    |   importStatement
+    |   expressionStatement
+    |   returnStatement
+    |   throwStatement
+    |   loopControlStatement
+    |   blockDeclStatement
     |   ifStatement
     |   whileStatement
     |   loopStatement
@@ -28,7 +28,8 @@ statement
     |   tryStatement
     |   withStatement
     |   switchStatement
-    |   classDeclStatement SEMI?
+    |   classDeclStatement
+    |   namespaceDeclStatement
     ;
 
 packageDeclStatement
@@ -36,12 +37,12 @@ packageDeclStatement
     ;
 
 variableDeclStatement
-    :   (KEYWORD_VAR | KEYWORD_CONST) IDENTIFIER ASSIGN expression
+    :   (KEYWORD_VAR | KEYWORD_CONST) nameAndType ASSIGN expression
     |   (KEYWORD_VAR | KEYWORD_CONST) LPAREN? variableBindingList RPAREN? ASSIGN expression
     ;
 
 variableBindingList
-    :   IDENTIFIER (COMMA IDENTIFIER)*
+    :   nameAndType (COMMA nameAndType)*
     ;
 
 functionDeclStatement
@@ -59,8 +60,8 @@ importStatement
 expressionStatement
     :   preIncrementExpression
     |   preDecrementExpression
-    |   primaryExpressionAsStatement (INC | DEC | assignmentOperator expression)?
     |   structuredBindingPrefix ASSIGN expression
+    |   primaryExpressionAsStatement (INC | DEC | assignmentOperator expression)?
     ;
 
 structuredBindingPrefix
@@ -152,19 +153,33 @@ defaultEntry
     ;
 
 classDeclStatement
-    :   (KEYWORD_CLASS | KEYWORD_STRUCT) IDENTIFIER (KEYWORD_EXTENDS IDENTIFIER)?
+    :   (KEYWORD_CLASS | KEYWORD_STRUCT) IDENTIFIER (KEYWORD_EXTENDS typeName)?
         LBRACE
-            classBody
+            declBody
         RBRACE
     ;
 
-classBody
-    :   (variableDeclStatement | functionDeclStatement)*
+namespaceDeclStatement
+    :   KEYWORD_NAMESPACE IDENTIFIER
+        LBRACE
+            declBody
+        RBRACE
     ;
 
 // Statement Helpers
 statementList
     :   statement*
+    ;
+
+declBody
+    :   declBodyItem*
+    ;
+
+declBodyItem
+    :   variableDeclStatement
+    |   functionDeclStatement
+    |   classDeclStatement
+    |   namespaceDeclStatement
     ;
 
 // Expressions
@@ -326,7 +341,20 @@ argumentList
     ;
 
 parameterList
-    :   (IDENTIFIER (EXPAND | ((COMMA IDENTIFIER)* | COMMA IDENTIFIER EXPAND)))?
+    :   (nameAndType EXPAND)?
+    |   (nameAndType (COMMA nameAndType)* (COMMA parameterItemExpanded)?)?
+    ;
+
+nameAndType
+    :   IDENTIFIER (COLON typeName)?
+    ;
+
+parameterItemExpanded
+    :   nameAndType EXPAND
+    ;
+
+typeName
+    :   IDENTIFIER (DOT IDENTIFIER)*
     ;
 
 assignmentOperator
