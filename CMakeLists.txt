@@ -104,7 +104,8 @@ set(compiler_SRC
         compiler/src/covscript/compiler/variable.cpp
         compiler/include/covscript/compiler/asm/codeWriter.hpp
         compiler/include/covscript/compiler/typeDeduce.hpp
-        compiler/src/covscript/compiler/typeDeduce.cpp)
+        compiler/src/covscript/compiler/typeDeduce.cpp
+        compiler/include/covscript/compiler/cfg/controlFlowGraph.hpp)
 
 set(runtime_SRC
         runtime/include/covscript/runtime/vm_instance.hpp
