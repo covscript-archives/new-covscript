@@ -38,7 +38,7 @@ namespace cs {
             this->constructASTs();
             for (auto &phase : _compilerPhases) {
                 for (auto &elem : _privateData.getCompileFiles()) {
-                    if (_verbose) {
+                    if (_privateData.isVerboseOutput()) {
                         printf("[Compiler] Running phase %s on file %s\n",
                             phase->getPhaseName().c_str(),
                             elem.first->getSourceName().c_str());
