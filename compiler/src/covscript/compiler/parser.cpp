@@ -16,8 +16,8 @@ namespace cs {
             }
 
             void reportInputMismatch(antlr4::Parser *recognizer, const antlr4::InputMismatchException &e) override {
-                std::string msg = "mismatched input " + getTokenErrorDisplay(e.getOffendingToken()) +
-                                  " expecting " + e.getExpectedTokens().toString(recognizer->getVocabulary());
+                std::string msg = "unexpected input " + getTokenErrorDisplay(e.getOffendingToken()) +
+                                  " expected " + e.getExpectedTokens().toString(recognizer->getVocabulary());
                 recognizer->notifyErrorListeners(e.getOffendingToken(), msg, std::make_exception_ptr(e));
             }
 
@@ -62,9 +62,7 @@ namespace cs {
             for (size_t i = 0; i < e.getCharPosition(); ++i) {
                 putchar(' ');
             }
-            putchar('^');
-            putchar('\n');
-            printf("%s\n", e.getMessage().c_str());
+            printf("^\n%s\n", e.getMessage().c_str());
         }
 
         SyntaxError::SyntaxError(antlr4::RuleContext *ruleContext, antlr4::Token *offendingToken,
