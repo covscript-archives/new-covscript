@@ -1,10 +1,6 @@
-#include <iostream>
-
-#include <cstdio>
 #include <covscript/compiler/compiler.hpp>
 #include <covscript/compiler/phase/assembleDefine.hpp>
 #include <covscript/compiler/phase/assembleScan.hpp>
-#include <CovScriptBaseVisitor.h>
 
 using namespace cs::compiler;
 
