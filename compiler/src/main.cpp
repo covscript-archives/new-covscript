@@ -10,8 +10,12 @@ int main() {
     compiler.registerPhase<PhaseAssembleDefine>();
 
     compiler.addFile(makePtr<CodeSourceFile>("<code>", "var a = hello"));
-    compiler.addFile(makePtr<RegularSourceFile>("compiler/tests/hello.csc4"));
-    compiler.compile();
+    compiler.addFile(makePtr<RegularSourceFile>("compiler/tests/syntaxError.csc4"));
 
+    try {
+        compiler.compile();
+    } catch (SyntaxError &e) {
+        std::cout << CovScriptCompiler::formatSyntaxError(e);
+    }
     return 0;
 }

@@ -16,8 +16,12 @@ namespace cs {
                                                std::exception_ptr e) {
             try {
                 std::rethrow_exception(e);
-            } catch (antlr4::RecognitionException &re) {
-                compilerThrow<SyntaxError>(re.getCtx(), offendingSymbol, line, charPositionInLine, msg);
+            } catch (ParserErrorData &errorData) {
+                auto &&re = errorData._reEx;
+                compilerThrow<SyntaxError>(re.getCtx(), offendingSymbol,
+                    line, charPositionInLine, msg,
+                    errorData._errorCode,
+                    errorData._errorFile);
             }
         }
 

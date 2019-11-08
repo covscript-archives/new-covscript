@@ -169,6 +169,9 @@ namespace cs {
             }
 
             void compile();
+
+        public:
+            static std::string formatSyntaxError(const SyntaxError &error);
         };
     }
 }

@@ -5,6 +5,7 @@
 
 #include <antlr4-runtime.h>
 #include <covscript/compiler/sharedTypes.hpp>
+#include <utility>
 #include <CovScriptParser.h>
 #include <CovScriptLexer.h>
 #include <CovScriptBaseListener.h>
@@ -75,6 +76,18 @@ namespace cs {
             }
         };
 
+        class ParserErrorData {
+        public:
+            const antlr4::RecognitionException &_reEx;
+            std::string _errorCode;
+            std::string _errorFile;
+
+            ParserErrorData(const antlr4::RecognitionException &reEx, std::string errorCode,
+                            std::string errorFile)
+                : _reEx(reEx), _errorCode(std::move(errorCode)), _errorFile(std::move(errorFile)) {
+            }
+        };
+
         class SyntaxError : public std::exception {
         private:
             antlr4::RuleContext *_ruleContext;
@@ -82,10 +95,13 @@ namespace cs {
             size_t _line;
             size_t _charPosition;
             std::string _message;
+            std::string _errorCode;
+            std::string _errorFile;
 
         public:
             SyntaxError(antlr4::RuleContext *ruleContext, antlr4::Token *offendingSymbol,
-                        size_t line, size_t charPosition, std::string message);
+                        size_t line, size_t charPosition, std::string message,
+                        std::string errorCode, std::string errorFile);
 
             antlr4::RuleContext *getRuleContext() const {
                 return _ruleContext;
@@ -103,6 +119,14 @@ namespace cs {
                 return _message;
             }
 
+            const std::string &getErrorCode() const {
+                return _errorCode;
+            }
+
+            const std::string &getErrorFile() const {
+                return _errorFile;
+            }
+
             antlr4::Token *getOffendingSymbol() const {
                 return _offendingSymbol;
             }
@@ -117,11 +141,9 @@ namespace cs {
             antlr4::CommonTokenStream _antlrTokenStream;
 
         public:
-            explicit Parser(const Ptr<SourceFile>& file);
+            explicit Parser(const Ptr<SourceFile> &file);
 
             ~Parser() override;
-
-            void printSyntaxError(SyntaxError &e);
 
             CovScriptLexer &getLexer() {
                 return _lexer;
