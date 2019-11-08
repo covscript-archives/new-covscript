@@ -15,7 +15,7 @@ int main() {
     try {
         compiler.compile();
     } catch (SyntaxError &e) {
-        std::cout << CovScriptCompiler::formatSyntaxError(e);
+        std::cerr << CovScriptCompiler::formatSyntaxError(e);
     }
     return 0;
 }
